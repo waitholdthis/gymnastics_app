@@ -15,6 +15,7 @@ import { Spinner } from '@/components/ui';
 import AuthScreen from '@/components/AuthScreen';
 import ProfileSetup from '@/components/ProfileSetup';
 import { DemoDataProvider, api, useQuery } from '@/lib/demoData';
+import { AppThemeProvider } from '@/lib/appTheme';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -75,14 +76,16 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <UIThemeProvider>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <DemoDataProvider>
-            <AppContent />
-            <StatusBar style="auto" />
-          </DemoDataProvider>
-        </ThemeProvider>
-      </UIThemeProvider>
+      <AppThemeProvider>
+        <UIThemeProvider>
+          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <DemoDataProvider>
+              <AppContent />
+              <StatusBar style="auto" />
+            </DemoDataProvider>
+          </ThemeProvider>
+        </UIThemeProvider>
+      </AppThemeProvider>
     </GestureHandlerRootView>
   );
 }

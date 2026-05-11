@@ -13,11 +13,11 @@ import {
   Target,
   Users,
 } from "lucide-react-native";
-
-const SHADOW = { shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 8, elevation: 3 };
+import { useAppTheme } from "@/lib/appTheme";
 
 export default function CoachConnection() {
   const router = useRouter();
+  const { colors } = useAppTheme();
   const gymnast = useQuery(api.gymnasts.getGymnast);
   const goals = useQuery(api.gymnasts.getGoals, gymnast ? { gymnastId: gymnast._id } : "skip");
   const notes = useQuery(api.gymnasts.getCoachNotes, gymnast ? { gymnastId: gymnast._id } : "skip");
@@ -30,9 +30,9 @@ export default function CoachConnection() {
   const [newNote, setNewNote] = useState("");
 
   if (gymnast === undefined || goals === undefined)
-    return <View className="flex-1 bg-white items-center justify-center"><Spinner /></View>;
+    return <View className="flex-1 items-center justify-center" style={{ backgroundColor: colors.bg }}><Spinner /></View>;
   if (gymnast === null)
-    return <View className="flex-1 bg-white items-center justify-center"><Text className="text-[#1A1A1A]">Gymnast not found</Text></View>;
+    return <View className="flex-1 items-center justify-center" style={{ backgroundColor: colors.bg }}><Text style={{ color: colors.text }}>Gymnast not found</Text></View>;
 
   const handleAddGoal = async () => {
     if (!newGoal.trim()) return;
@@ -50,21 +50,25 @@ export default function CoachConnection() {
   const totalGoals = goals?.length ?? 0;
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
+    <SafeAreaView className="flex-1" style={{ backgroundColor: colors.bg }} edges={["top"]}>
       {/* Header */}
-      <View className="px-4 pt-4 pb-3 flex-row items-center gap-3 border-b border-[#E8E8E8]">
+      <View
+        className="px-4 pt-4 pb-3 flex-row items-center gap-3 border-b"
+        style={{ borderBottomColor: colors.border }}
+      >
         <Pressable
           onPress={() => router.back()}
-          className="h-11 w-11 items-center justify-center rounded-full bg-[#F0F0EE]"
+          className="h-11 w-11 items-center justify-center rounded-full"
+          style={{ backgroundColor: colors.backBtnBg }}
         >
-          <ChevronLeft size={22} color="#444444" />
+          <ChevronLeft size={22} color={colors.backBtnIcon} />
         </Pressable>
         <View className="flex-1">
-          <Text className="text-[10px] font-black uppercase tracking-widest text-[#D4A843]">Gym & Home</Text>
-          <Text className="text-2xl font-black text-[#1A1A1A]">Coach Connection</Text>
+          <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.gold }}>Gym & Home</Text>
+          <Text className="text-2xl font-black" style={{ color: colors.text }}>Coach Connection</Text>
         </View>
-        <View className="h-11 w-11 items-center justify-center rounded-full bg-[#FDF2F8]">
-          <Users size={20} color="#BE185D" />
+        <View className="h-11 w-11 items-center justify-center rounded-full" style={{ backgroundColor: colors.pinkBg }}>
+          <Users size={20} color={colors.pink} />
         </View>
       </View>
 
@@ -73,23 +77,23 @@ export default function CoachConnection() {
 
           {/* Talking Points */}
           <View className="mb-6">
-            <SectionHeader icon={<MessageSquare size={17} color="#BE185D" />} label="Suggested Talking Points" />
+            <SectionHeader icon={<MessageSquare size={17} color={colors.pink} />} label="Suggested Talking Points" />
             <View className="gap-3">
               <TalkingPoint
-                color="#BE185D"
-                bg="#FDF2F8"
+                color={colors.pink}
+                bg={colors.pinkBg}
                 title="Technical Focus"
                 question={`What's the one cue that helps ${gymnast.name} the most on her kip right now?`}
               />
               <TalkingPoint
-                color="#1D5BB5"
-                bg="#EFF6FF"
+                color={colors.blue}
+                bg={colors.blueBg}
                 title="Wellness Adjustment"
                 question="She's feeling some heel soreness today — can we focus on bars or low-impact landing drills?"
               />
               <TalkingPoint
-                color="#D4A843"
-                bg="#FDF6E3"
+                color={colors.gold}
+                bg={colors.goldBg}
                 title="Motivation Check"
                 question="How has her focus been during transitions between events today?"
               />
@@ -98,34 +102,42 @@ export default function CoachConnection() {
 
           {/* Goals */}
           <View className="mb-6">
-            <SectionHeader icon={<Target size={17} color="#1D5BB5" />} label="Practice Goals" />
+            <SectionHeader icon={<Target size={17} color={colors.blue} />} label="Practice Goals" />
 
             {totalGoals > 0 && (
-              <View className="mb-3 rounded-2xl border border-[#E8E8E8] bg-white px-4 py-3 flex-row items-center gap-3" style={SHADOW}>
-                <View className="flex-1 h-2 overflow-hidden rounded-full bg-[#F0F0EE]">
+              <View
+                className="mb-3 rounded-2xl px-4 py-3 flex-row items-center gap-3"
+                style={[colors.shadow, { borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface }]}
+              >
+                <View className="flex-1 h-2 overflow-hidden rounded-full" style={{ backgroundColor: colors.bgTertiary }}>
                   <View
-                    className="h-full rounded-full bg-[#D4A843]"
-                    style={{ width: `${Math.round((completedGoals / totalGoals) * 100)}%` }}
+                    className="h-full rounded-full"
+                    style={{ width: `${Math.round((completedGoals / totalGoals) * 100)}%`, backgroundColor: colors.gold }}
                   />
                 </View>
-                <Text className="text-[11px] font-black text-[#D4A843]">{completedGoals}/{totalGoals} cleared</Text>
+                <Text className="text-[11px] font-black" style={{ color: colors.gold }}>{completedGoals}/{totalGoals} cleared</Text>
               </View>
             )}
 
             <View className="flex-row gap-2 mb-3">
-              <View className="flex-1 overflow-hidden rounded-xl border border-[#E8E8E8] bg-[#F8F8F6]">
+              <View
+                className="flex-1 overflow-hidden rounded-xl"
+                style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.bgSecondary }}
+              >
                 <Input
                   placeholder="Add a new practice goal..."
                   value={newGoal}
                   onChangeText={setNewGoal}
-                  className="border-0 bg-transparent px-4 py-3 text-[#1A1A1A]"
-                  placeholderTextColor="#BBBBBB"
+                  className="border-0 bg-transparent px-4 py-3"
+                  style={{ color: colors.text }}
+                  placeholderTextColor={colors.textDisabled}
                   onSubmitEditing={handleAddGoal}
                 />
               </View>
               <Pressable
                 onPress={handleAddGoal}
-                className="h-12 w-12 items-center justify-center rounded-xl bg-[#D4A843]"
+                className="h-12 w-12 items-center justify-center rounded-xl"
+                style={{ backgroundColor: colors.gold }}
               >
                 <Plus size={20} color="#1A1A1A" />
               </Pressable>
@@ -136,18 +148,18 @@ export default function CoachConnection() {
                 <Pressable
                   key={goal._id}
                   onPress={() => toggleGoal({ goalId: goal._id, isAchieved: !goal.isAchieved })}
-                  className="flex-row items-center gap-3 rounded-2xl bg-white p-4"
-                  style={[SHADOW, { borderLeftWidth: 2, borderLeftColor: goal.isAchieved ? "#16A34A" : "#E8E8E8" }]}
+                  className="flex-row items-center gap-3 rounded-2xl p-4"
+                  style={[colors.shadow, { backgroundColor: colors.surface, borderLeftWidth: 2, borderLeftColor: goal.isAchieved ? colors.green : colors.border }]}
                 >
                   {goal.isAchieved ? (
-                    <CheckCircle2 size={20} color="#16A34A" />
+                    <CheckCircle2 size={20} color={colors.green} />
                   ) : (
-                    <Circle size={20} color="#AAAAAA" />
+                    <Circle size={20} color={colors.textDisabled} />
                   )}
                   <Text
                     className="flex-1 text-sm font-bold"
                     style={{
-                      color: goal.isAchieved ? "#16A34A" : "#1A1A1A",
+                      color: goal.isAchieved ? colors.green : colors.text,
                       textDecorationLine: goal.isAchieved ? "line-through" : "none",
                     }}
                   >
@@ -168,24 +180,29 @@ export default function CoachConnection() {
 
           {/* Coach Notes */}
           <View className="mb-10">
-            <SectionHeader icon={<ClipboardList size={17} color="#D4A843" />} label="Coach Feedback Log" />
+            <SectionHeader icon={<ClipboardList size={17} color={colors.gold} />} label="Coach Feedback Log" />
 
             <View className="mb-4">
-              <View className="mb-2 overflow-hidden rounded-xl border border-[#E8E8E8] bg-[#F8F8F6]">
+              <View
+                className="mb-2 overflow-hidden rounded-xl"
+                style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.bgSecondary }}
+              >
                 <Input
                   placeholder="Record what the coach said today..."
                   value={newNote}
                   onChangeText={setNewNote}
                   multiline
-                  className="h-20 border-0 bg-transparent p-4 text-[#1A1A1A]"
-                  placeholderTextColor="#BBBBBB"
+                  className="h-20 border-0 bg-transparent p-4"
+                  style={{ color: colors.text }}
+                  placeholderTextColor={colors.textDisabled}
                 />
               </View>
               <Pressable
                 onPress={handleAddNote}
-                className="items-center rounded-xl bg-[#D4A843] py-3"
+                className="items-center rounded-xl py-3"
+                style={{ backgroundColor: colors.gold }}
               >
-                <Text className="font-black text-[#1A1A1A]">Add Coach Note</Text>
+                <Text className="font-black" style={{ color: "#1A1A1A" }}>Add Coach Note</Text>
               </Pressable>
             </View>
 
@@ -193,14 +210,14 @@ export default function CoachConnection() {
               {notes?.map((note: any) => (
                 <View
                   key={note._id}
-                  className="rounded-2xl bg-white p-4"
-                  style={[SHADOW, { borderLeftWidth: 3, borderLeftColor: "#D4A843" }]}
+                  className="rounded-2xl p-4"
+                  style={[colors.shadow, { backgroundColor: colors.surface, borderLeftWidth: 3, borderLeftColor: colors.gold }]}
                 >
                   <View className="flex-row items-center justify-between mb-2">
-                    <Text className="text-[10px] font-black uppercase text-[#D4A843]">{note.date}</Text>
-                    <Users size={12} color="#AAAAAA" />
+                    <Text className="text-[10px] font-black uppercase" style={{ color: colors.gold }}>{note.date}</Text>
+                    <Users size={12} color={colors.textDisabled} />
                   </View>
-                  <Text className="text-sm leading-5 text-[#555555]">{note.note}</Text>
+                  <Text className="text-sm leading-5" style={{ color: colors.textSecondary }}>{note.note}</Text>
                 </View>
               ))}
             </View>
@@ -214,20 +231,22 @@ export default function CoachConnection() {
 }
 
 function SectionHeader({ icon, label }: { icon: React.ReactNode; label: string }) {
+  const { colors } = useAppTheme();
   return (
     <View className="flex-row items-center gap-2 mb-3">
       {icon}
-      <Text className="font-black text-base text-[#1A1A1A]">{label}</Text>
-      <View className="flex-1 h-px bg-[#E8E8E8] ml-2" />
+      <Text className="font-black text-base" style={{ color: colors.text }}>{label}</Text>
+      <View className="flex-1 h-px ml-2" style={{ backgroundColor: colors.border }} />
     </View>
   );
 }
 
 function TalkingPoint({ title, question, color, bg }: { title: string; question: string; color: string; bg: string }) {
+  const { colors } = useAppTheme();
   return (
     <View className="rounded-2xl p-4" style={{ backgroundColor: bg, borderLeftWidth: 3, borderLeftColor: color }}>
       <Text className="text-[10px] font-black uppercase mb-1.5" style={{ color }}>{title}</Text>
-      <Text className="text-sm leading-5 italic text-[#555555]">"{question}"</Text>
+      <Text className="text-sm leading-5 italic" style={{ color: colors.textSecondary }}>"{question}"</Text>
     </View>
   );
 }

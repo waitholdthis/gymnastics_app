@@ -14,11 +14,11 @@ import { Alert, Animated, Pressable, ScrollView, View } from "react-native";
 import { api, useMutation, useQuery } from "@/lib/demoData";
 import { Input, SafeAreaView, Spinner, Text } from "@/components/ui";
 import { Video, ResizeMode } from "expo-av";
-
-const SHADOW = { shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 8, elevation: 3 };
+import { useAppTheme } from "@/lib/appTheme";
 
 export default function EpicMoment() {
   const router = useRouter();
+  const { colors } = useAppTheme();
   const gymnast = useQuery(api.gymnasts.getGymnast);
   const reels = useQuery(api.gymnasts.getReels, gymnast ? { gymnastId: gymnast._id } : "skip");
   const addReel = useMutation(api.gymnasts.addReel);
@@ -28,9 +28,9 @@ export default function EpicMoment() {
   const [activeReel, setActiveReel] = useState<string | null>(null);
 
   if (gymnast === undefined || reels === undefined)
-    return <View className="flex-1 bg-white items-center justify-center"><Spinner /></View>;
+    return <View className="flex-1 items-center justify-center" style={{ backgroundColor: colors.bg }}><Spinner /></View>;
   if (gymnast === null)
-    return <View className="flex-1 bg-white items-center justify-center"><Text className="text-[#1A1A1A]">Gymnast not found</Text></View>;
+    return <View className="flex-1 items-center justify-center" style={{ backgroundColor: colors.bg }}><Text style={{ color: colors.text }}>Gymnast not found</Text></View>;
 
   const handlePickVideo = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -124,21 +124,25 @@ export default function EpicMoment() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
+    <SafeAreaView className="flex-1" style={{ backgroundColor: colors.bg }} edges={["top"]}>
       {/* Header */}
-      <View className="px-4 pt-4 pb-3 flex-row items-center gap-3 border-b border-[#E8E8E8]">
+      <View
+        className="px-4 pt-4 pb-3 flex-row items-center gap-3 border-b"
+        style={{ borderBottomColor: colors.border }}
+      >
         <Pressable
           onPress={() => router.back()}
-          className="h-11 w-11 items-center justify-center rounded-full bg-[#F0F0EE]"
+          className="h-11 w-11 items-center justify-center rounded-full"
+          style={{ backgroundColor: colors.backBtnBg }}
         >
-          <ChevronLeft size={22} color="#444444" />
+          <ChevronLeft size={22} color={colors.backBtnIcon} />
         </Pressable>
         <View className="flex-1">
-          <Text className="text-[10px] font-black uppercase tracking-widest text-[#D4A843]">Cinematic Vault</Text>
-          <Text className="text-2xl font-black text-[#1A1A1A]">Epic Moment Reels</Text>
+          <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.gold }}>Cinematic Vault</Text>
+          <Text className="text-2xl font-black" style={{ color: colors.text }}>Epic Moment Reels</Text>
         </View>
-        <View className="h-11 w-11 items-center justify-center rounded-full bg-[#FDF6E3]">
-          <Film size={20} color="#D4A843" />
+        <View className="h-11 w-11 items-center justify-center rounded-full" style={{ backgroundColor: colors.goldBg }}>
+          <Film size={20} color={colors.gold} />
         </View>
       </View>
 
@@ -148,31 +152,34 @@ export default function EpicMoment() {
           <UploadButton
             label="Upload Clip"
             sublabel="From camera roll"
-            icon={<Upload size={20} color="#D4A843" />}
-            color="#D4A843"
-            bg="#FDF6E3"
+            icon={<Upload size={20} color={colors.gold} />}
+            color={colors.gold}
+            bg={colors.goldBg}
             loading={uploading}
             onPress={handlePickVideo}
           />
           <UploadButton
             label="Record Now"
             sublabel="Use camera"
-            icon={<Clapperboard size={20} color="#1D5BB5" />}
-            color="#1D5BB5"
-            bg="#EFF6FF"
+            icon={<Clapperboard size={20} color={colors.blue} />}
+            color={colors.blue}
+            bg={colors.blueBg}
             loading={false}
             onPress={handleRecordVideo}
           />
         </View>
 
         {/* Privacy Banner */}
-        <View className="mb-5 flex-row items-start gap-3 rounded-2xl border border-[#16A34A]/20 bg-[#F0FDF4] p-4">
+        <View
+          className="mb-5 flex-row items-start gap-3 rounded-2xl p-4"
+          style={{ backgroundColor: colors.greenBg, borderWidth: 1, borderColor: `${colors.green}33` }}
+        >
           <View className="mt-0.5">
-            <Film size={16} color="#16A34A" />
+            <Film size={16} color={colors.green} />
           </View>
           <View className="flex-1">
-            <Text className="text-[10px] font-black uppercase text-[#16A34A] mb-1">Fort Knox Privacy</Text>
-            <Text className="text-xs leading-4 text-[#555555]">
+            <Text className="text-[10px] font-black uppercase mb-1" style={{ color: colors.green }}>Fort Knox Privacy</Text>
+            <Text className="text-xs leading-4" style={{ color: colors.textSecondary }}>
               All clips stay private by default. Sharing requires your approval and generates a watermarked, expiring link.
             </Text>
           </View>
@@ -181,11 +188,11 @@ export default function EpicMoment() {
         {/* Empty State */}
         {reels.length === 0 && !uploading && (
           <View className="items-center py-16">
-            <View className="h-24 w-24 items-center justify-center rounded-full bg-[#FDF6E3] mb-5">
-              <Play size={44} color="#D4A843" />
+            <View className="h-24 w-24 items-center justify-center rounded-full mb-5" style={{ backgroundColor: colors.goldBg }}>
+              <Play size={44} color={colors.gold} />
             </View>
-            <Text className="text-xl font-black text-[#1A1A1A] mb-2">No Reels Yet</Text>
-            <Text className="text-sm text-center text-[#888888] leading-5 max-w-[260px]">
+            <Text className="text-xl font-black mb-2" style={{ color: colors.text }}>No Reels Yet</Text>
+            <Text className="text-sm text-center leading-5 max-w-[260px]" style={{ color: colors.textMuted }}>
               Upload your first Epic Moment — a stick landing, first kip, or beam salute.
             </Text>
           </View>
@@ -197,10 +204,10 @@ export default function EpicMoment() {
         {reels.length > 0 && (
           <View className="mb-6">
             <View className="flex-row items-center gap-3 mb-3">
-              <Text className="text-[10px] font-black uppercase tracking-widest text-[#D4A843]">
+              <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.gold }}>
                 {reels.length} Clip{reels.length !== 1 ? "s" : ""} in Vault
               </Text>
-              <View className="flex-1 h-px bg-[#E8E8E8]" />
+              <View className="flex-1 h-px" style={{ backgroundColor: colors.border }} />
             </View>
             <View className="gap-4">
               {reels.map((reel: any) => (
@@ -234,6 +241,7 @@ function UploadButton({
   loading: boolean;
   onPress: () => void;
 }) {
+  const { colors } = useAppTheme();
   const scale = useRef(new Animated.Value(1)).current;
 
   const pressIn = () =>
@@ -251,13 +259,14 @@ function UploadButton({
       >
         {loading ? <Spinner /> : icon}
         <Text className="font-black text-sm mt-2" style={{ color }}>{label}</Text>
-        <Text className="text-[10px] font-bold uppercase text-[#888888] mt-0.5">{sublabel}</Text>
+        <Text className="text-[10px] font-bold uppercase mt-0.5" style={{ color: colors.textMuted }}>{sublabel}</Text>
       </Animated.View>
     </Pressable>
   );
 }
 
 function UploadingCard() {
+  const { colors } = useAppTheme();
   const progress = useRef(new Animated.Value(0)).current;
 
   React.useEffect(() => {
@@ -272,18 +281,21 @@ function UploadingCard() {
   const width = progress.interpolate({ inputRange: [0, 1], outputRange: ["0%", "100%"] });
 
   return (
-    <View className="mb-4 overflow-hidden rounded-2xl border border-[#E8E8E8] bg-white p-4" style={SHADOW}>
+    <View
+      className="mb-4 overflow-hidden rounded-2xl p-4"
+      style={[colors.shadow, { borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface }]}
+    >
       <View className="flex-row items-center gap-3 mb-3">
-        <View className="h-10 w-10 items-center justify-center rounded-xl bg-[#FDF6E3]">
-          <Upload size={18} color="#D4A843" />
+        <View className="h-10 w-10 items-center justify-center rounded-xl" style={{ backgroundColor: colors.goldBg }}>
+          <Upload size={18} color={colors.gold} />
         </View>
         <View className="flex-1">
-          <Text className="font-black text-[#1A1A1A]">Uploading to Vault...</Text>
-          <Text className="text-xs text-[#888888]">Encrypting and saving your clip</Text>
+          <Text className="font-black" style={{ color: colors.text }}>Uploading to Vault...</Text>
+          <Text className="text-xs" style={{ color: colors.textMuted }}>Encrypting and saving your clip</Text>
         </View>
       </View>
-      <View className="h-2 overflow-hidden rounded-full bg-[#F0F0EE]">
-        <Animated.View style={{ width, height: "100%", backgroundColor: "#D4A843", borderRadius: 99 }} />
+      <View className="h-2 overflow-hidden rounded-full" style={{ backgroundColor: colors.bgTertiary }}>
+        <Animated.View style={{ width, height: "100%", backgroundColor: colors.gold, borderRadius: 99 }} />
       </View>
     </View>
   );
@@ -298,6 +310,7 @@ function ReelCard({
   onShare: () => void;
   onDelete: () => void;
 }) {
+  const { colors } = useAppTheme();
   const [editingTitle, setEditingTitle] = useState(false);
   const [title, setTitle] = useState(reel.title);
 
@@ -306,7 +319,7 @@ function ReelCard({
   });
 
   return (
-    <View className="overflow-hidden rounded-2xl bg-white" style={SHADOW}>
+    <View className="overflow-hidden rounded-2xl" style={[colors.shadow, { backgroundColor: colors.surface }]}>
       {/* Video Player */}
       <Pressable onPress={onPlay} className="relative">
         {isActive ? (
@@ -320,13 +333,13 @@ function ReelCard({
           />
         ) : (
           <View
-            className="w-full items-center justify-center bg-[#1A1A2E]"
-            style={{ aspectRatio: 16 / 9 }}
+            className="w-full items-center justify-center"
+            style={{ aspectRatio: 16 / 9, backgroundColor: colors.hero }}
           >
             <View className="h-16 w-16 items-center justify-center rounded-full bg-[#D4A843]/20">
-              <Play size={32} color="#D4A843" />
+              <Play size={32} color={colors.gold} />
             </View>
-            <Text className="mt-3 text-[10px] font-black uppercase tracking-widest text-[#9999BB]">
+            <Text className="mt-3 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.heroSubtext }}>
               Tap to play
             </Text>
             {reel.duration && (
@@ -342,37 +355,43 @@ function ReelCard({
       <View className="p-4">
         <View className="flex-row items-center justify-between mb-1">
           {editingTitle ? (
-            <View className="flex-1 mr-2 overflow-hidden rounded-xl border border-[#E8E8E8] bg-[#F8F8F6]">
+            <View
+              className="flex-1 mr-2 overflow-hidden rounded-xl"
+              style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.bgSecondary }}
+            >
               <Input
                 value={title}
                 onChangeText={setTitle}
                 onSubmitEditing={() => setEditingTitle(false)}
                 onBlur={() => setEditingTitle(false)}
                 autoFocus
-                className="border-0 bg-transparent px-3 py-2 text-[#1A1A1A] font-black"
+                className="border-0 bg-transparent px-3 py-2 font-black"
+                style={{ color: colors.text }}
               />
             </View>
           ) : (
             <Pressable onPress={() => setEditingTitle(true)} className="flex-1">
-              <Text className="font-black text-[#1A1A1A] text-base">{title}</Text>
+              <Text className="font-black text-base" style={{ color: colors.text }}>{title}</Text>
             </Pressable>
           )}
         </View>
-        <Text className="text-[11px] text-[#888888] mb-3">{createdDate}</Text>
+        <Text className="text-[11px] mb-3" style={{ color: colors.textMuted }}>{createdDate}</Text>
 
         <View className="flex-row gap-2">
           <Pressable
             onPress={onShare}
-            className="flex-1 flex-row items-center justify-center gap-2 rounded-xl py-2.5 bg-[#FDF6E3] border border-[#D4A843]/30"
+            className="flex-1 flex-row items-center justify-center gap-2 rounded-xl py-2.5"
+            style={{ backgroundColor: colors.goldBg, borderWidth: 1, borderColor: `${colors.gold}4D` }}
           >
-            <Share size={14} color="#D4A843" />
-            <Text className="text-xs font-black text-[#D4A843]">Share</Text>
+            <Share size={14} color={colors.gold} />
+            <Text className="text-xs font-black" style={{ color: colors.gold }}>Share</Text>
           </Pressable>
           <Pressable
             onPress={onDelete}
-            className="h-10 w-10 items-center justify-center rounded-xl bg-[#FFF0F0] border border-[#E54B4B]/30"
+            className="h-10 w-10 items-center justify-center rounded-xl"
+            style={{ backgroundColor: colors.redBg, borderWidth: 1, borderColor: `${colors.red}4D` }}
           >
-            <Trash2 size={14} color="#E54B4B" />
+            <Trash2 size={14} color={colors.red} />
           </Pressable>
         </View>
       </View>

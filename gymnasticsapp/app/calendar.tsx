@@ -13,43 +13,45 @@ import {
   Plus,
   X,
 } from "lucide-react-native";
-
-const SHADOW = { shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 8, elevation: 3 };
+import { useAppTheme } from "@/lib/appTheme";
 
 export default function CalendarScreen() {
   const router = useRouter();
+  const { colors } = useAppTheme();
   const gymnast = useQuery(api.gymnasts.getGymnast);
   const schedules = useQuery(api.gymnasts.getSchedules, gymnast ? { gymnastId: gymnast._id } : "skip");
   const [isAdding, setIsAdding] = useState(false);
 
   if (gymnast === undefined || (gymnast !== null && schedules === undefined))
-    return <View className="flex-1 bg-white items-center justify-center"><Spinner /></View>;
+    return <View className="flex-1 items-center justify-center" style={{ backgroundColor: colors.bg }}><Spinner /></View>;
   if (gymnast === null)
-    return <View className="flex-1 bg-white items-center justify-center"><Text className="text-[#1A1A1A]">Gymnast not found</Text></View>;
+    return <View className="flex-1 items-center justify-center" style={{ backgroundColor: colors.bg }}><Text style={{ color: colors.text }}>Gymnast not found</Text></View>;
 
   const upcomingMeets = schedules?.filter((s: any) => s.type === "meet") ?? [];
   const practices = schedules?.filter((s: any) => s.type === "practice") ?? [];
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
+    <SafeAreaView className="flex-1" style={{ backgroundColor: colors.bg }} edges={["top"]}>
       {/* Header */}
-      <View className="px-4 pt-4 pb-3 flex-row items-center justify-between border-b border-[#E8E8E8]">
+      <View className="px-4 pt-4 pb-3 flex-row items-center justify-between border-b" style={{ borderColor: colors.border }}>
         <View className="flex-row items-center gap-3">
           <Pressable
             onPress={() => router.back()}
-            className="h-11 w-11 items-center justify-center rounded-full bg-[#F0F0EE]"
+            className="h-11 w-11 items-center justify-center rounded-full"
+            style={{ backgroundColor: colors.backBtnBg }}
           >
-            <ChevronLeft size={22} color="#444444" />
+            <ChevronLeft size={22} color={colors.backBtnIcon} />
           </Pressable>
           <View>
-            <Text className="text-[10px] font-black uppercase tracking-widest text-[#D4A843]">Season Schedule</Text>
-            <Text className="text-2xl font-black text-[#1A1A1A]">Training Calendar</Text>
+            <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.gold }}>Season Schedule</Text>
+            <Text className="text-2xl font-black" style={{ color: colors.text }}>Training Calendar</Text>
           </View>
         </View>
         {!isAdding && (
           <Pressable
             onPress={() => setIsAdding(true)}
-            className="h-11 w-11 items-center justify-center rounded-full bg-[#D4A843]"
+            className="h-11 w-11 items-center justify-center rounded-full"
+            style={{ backgroundColor: colors.gold }}
           >
             <Plus size={20} color="#1A1A1A" />
           </Pressable>
@@ -62,11 +64,11 @@ export default function CalendarScreen() {
             <AddScheduleForm gymnastId={gymnast._id} onCancel={() => setIsAdding(false)} />
           ) : schedules?.length === 0 ? (
             <View className="items-center py-24">
-              <View className="h-20 w-20 items-center justify-center rounded-full bg-[#EFF6FF] mb-5">
-                <CalendarIcon size={40} color="#1D5BB5" />
+              <View className="h-20 w-20 items-center justify-center rounded-full mb-5" style={{ backgroundColor: colors.blueBg }}>
+                <CalendarIcon size={40} color={colors.blue} />
               </View>
-              <Text className="text-xl font-black text-[#1A1A1A] mb-2">Schedule is Clear</Text>
-              <Text className="text-sm text-center text-[#888888] leading-5">
+              <Text className="text-xl font-black mb-2" style={{ color: colors.text }}>Schedule is Clear</Text>
+              <Text className="text-sm text-center leading-5" style={{ color: colors.textMuted }}>
                 Add a practice or meet to start building your season timeline.
               </Text>
             </View>
@@ -102,18 +104,20 @@ export default function CalendarScreen() {
 }
 
 function SectionLabel({ label }: { label: string }) {
+  const { colors } = useAppTheme();
   return (
     <View className="flex-row items-center gap-3 mb-3">
-      <Text className="text-[10px] font-black uppercase tracking-widest text-[#D4A843]">{label}</Text>
-      <View className="flex-1 h-px bg-[#E8E8E8]" />
+      <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.gold }}>{label}</Text>
+      <View className="flex-1 h-px" style={{ backgroundColor: colors.border }} />
     </View>
   );
 }
 
 function ScheduleCard({ item }: { item: any }) {
+  const { colors } = useAppTheme();
   const isMeet = item.type === "meet";
-  const accentColor = isMeet ? "#D4A843" : "#1D5BB5";
-  const accentBg = isMeet ? "#FDF6E3" : "#EFF6FF";
+  const accentColor = isMeet ? colors.gold : colors.blue;
+  const accentBg = isMeet ? colors.goldBg : colors.blueBg;
 
   const dateObj = new Date(item.date);
   const dayName = dateObj.toLocaleDateString("en-US", { weekday: "short" });
@@ -122,8 +126,8 @@ function ScheduleCard({ item }: { item: any }) {
 
   return (
     <View
-      className="overflow-hidden rounded-2xl bg-white flex-row gap-4 p-4"
-      style={[SHADOW, { borderLeftWidth: 3, borderLeftColor: accentColor }]}
+      className="overflow-hidden rounded-2xl flex-row gap-4 p-4"
+      style={[colors.shadow, { backgroundColor: colors.surface, borderLeftWidth: 3, borderLeftColor: accentColor }]}
     >
       <View
         className="items-center justify-center rounded-xl px-3 py-2 min-w-[52px]"
@@ -144,18 +148,18 @@ function ScheduleCard({ item }: { item: any }) {
           {item.reminderEnabled ? (
             <Bell size={12} color={accentColor} />
           ) : (
-            <BellOff size={12} color="#AAAAAA" />
+            <BellOff size={12} color={colors.textDisabled} />
           )}
         </View>
-        <Text className="text-base font-black text-[#1A1A1A] mb-1">{item.title}</Text>
+        <Text className="text-base font-black mb-1" style={{ color: colors.text }}>{item.title}</Text>
         <View className="flex-row items-center gap-1">
-          <Clock size={11} color="#888888" />
-          <Text className="text-[11px] text-[#888888]">{item.startTime} – {item.endTime}</Text>
+          <Clock size={11} color={colors.textMuted} />
+          <Text className="text-[11px]" style={{ color: colors.textMuted }}>{item.startTime} – {item.endTime}</Text>
         </View>
         {item.location && (
           <View className="flex-row items-center gap-1 mt-1">
-            <MapPin size={11} color="#888888" />
-            <Text className="text-[11px] text-[#888888] flex-1" numberOfLines={1}>{item.location}</Text>
+            <MapPin size={11} color={colors.textMuted} />
+            <Text className="text-[11px] flex-1" style={{ color: colors.textMuted }} numberOfLines={1}>{item.location}</Text>
           </View>
         )}
       </View>
@@ -164,6 +168,7 @@ function ScheduleCard({ item }: { item: any }) {
 }
 
 function AddScheduleForm({ gymnastId, onCancel }: { gymnastId: any; onCancel: () => void }) {
+  const { colors } = useAppTheme();
   const addSchedule = useMutation(api.gymnasts.addSchedule);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
@@ -202,14 +207,14 @@ function AddScheduleForm({ gymnastId, onCancel }: { gymnastId: any; onCancel: ()
   };
 
   const isMeet = form.type === "meet";
-  const accentColor = isMeet ? "#D4A843" : "#1D5BB5";
+  const accentColor = isMeet ? colors.gold : colors.blue;
 
   return (
     <View className="pb-20">
       <View className="flex-row items-center justify-between mb-5">
-        <Text className="text-xl font-black text-[#1A1A1A]">Add Event</Text>
-        <Pressable onPress={onCancel} className="h-11 w-11 items-center justify-center rounded-full bg-[#F0F0EE]">
-          <X size={18} color="#555555" />
+        <Text className="text-xl font-black" style={{ color: colors.text }}>Add Event</Text>
+        <Pressable onPress={onCancel} className="h-11 w-11 items-center justify-center rounded-full" style={{ backgroundColor: colors.backBtnBg }}>
+          <X size={18} color={colors.textSecondary} />
         </Pressable>
       </View>
 
@@ -217,14 +222,14 @@ function AddScheduleForm({ gymnastId, onCancel }: { gymnastId: any; onCancel: ()
         <View className="flex-row gap-2">
           {(["practice", "meet"] as const).map((type) => {
             const isSelected = form.type === type;
-            const bg = isSelected ? (type === "meet" ? "#D4A843" : "#1D5BB5") : "#F8F8F6";
-            const textColor = isSelected ? (type === "meet" ? "#1A1A1A" : "#FFFFFF") : "#888888";
+            const bg = isSelected ? (type === "meet" ? colors.gold : colors.blue) : colors.bgSecondary;
+            const textColor = isSelected ? (type === "meet" ? "#1A1A1A" : "#FFFFFF") : colors.textMuted;
             return (
               <Pressable
                 key={type}
                 onPress={() => setForm({ ...form, type })}
                 className="flex-1 items-center py-3 rounded-xl"
-                style={{ backgroundColor: bg, borderWidth: 1, borderColor: isSelected ? "transparent" : "#E8E8E8" }}
+                style={{ backgroundColor: bg, borderWidth: 1, borderColor: isSelected ? "transparent" : colors.border }}
               >
                 <Text className="font-black capitalize" style={{ color: textColor }}>
                   {type === "meet" ? "Competition" : "Practice"}
@@ -254,7 +259,7 @@ function AddScheduleForm({ gymnastId, onCancel }: { gymnastId: any; onCancel: ()
       <FormSection label="Time Window">
         <View className="flex-row gap-3">
           <View className="flex-1">
-            <Text className="text-[10px] font-black uppercase text-[#888888] mb-1">Start</Text>
+            <Text className="text-[10px] font-black uppercase mb-1" style={{ color: colors.textMuted }}>Start</Text>
             <LightInput
               placeholder="16:00"
               value={form.startTime}
@@ -262,7 +267,7 @@ function AddScheduleForm({ gymnastId, onCancel }: { gymnastId: any; onCancel: ()
             />
           </View>
           <View className="flex-1">
-            <Text className="text-[10px] font-black uppercase text-[#888888] mb-1">End</Text>
+            <Text className="text-[10px] font-black uppercase mb-1" style={{ color: colors.textMuted }}>End</Text>
             <LightInput
               placeholder="19:00"
               value={form.endTime}
@@ -280,10 +285,10 @@ function AddScheduleForm({ gymnastId, onCancel }: { gymnastId: any; onCancel: ()
         />
       </FormSection>
 
-      <View className="flex-row items-center justify-between mb-6 rounded-2xl border border-[#E8E8E8] bg-white p-4" style={SHADOW}>
+      <View className="flex-row items-center justify-between mb-6 rounded-2xl p-4" style={[colors.shadow, { borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface }]}>
         <View>
-          <Text className="font-black text-[#1A1A1A]">Enable Reminder</Text>
-          <Text className="text-[11px] text-[#888888]">Notify me before this event</Text>
+          <Text className="font-black" style={{ color: colors.text }}>Enable Reminder</Text>
+          <Text className="text-[11px]" style={{ color: colors.textMuted }}>Notify me before this event</Text>
         </View>
         <Switch
           checked={form.reminderEnabled}
@@ -292,8 +297,8 @@ function AddScheduleForm({ gymnastId, onCancel }: { gymnastId: any; onCancel: ()
       </View>
 
       <View className="flex-row gap-3">
-        <Pressable onPress={onCancel} className="flex-1 items-center rounded-xl border border-[#E8E8E8] py-4">
-          <Text className="font-black text-[#888888]">Cancel</Text>
+        <Pressable onPress={onCancel} className="flex-1 items-center rounded-xl py-4" style={{ borderWidth: 1, borderColor: colors.border }}>
+          <Text className="font-black" style={{ color: colors.textMuted }}>Cancel</Text>
         </Pressable>
         <Pressable
           onPress={handleSubmit}
@@ -309,20 +314,23 @@ function AddScheduleForm({ gymnastId, onCancel }: { gymnastId: any; onCancel: ()
 }
 
 function FormSection({ label, children }: { label: string; children: React.ReactNode }) {
+  const { colors } = useAppTheme();
   return (
     <View className="mb-4">
-      <Text className="text-[10px] font-black uppercase tracking-widest text-[#D4A843] mb-2">{label}</Text>
+      <Text className="text-[10px] font-black uppercase tracking-widest mb-2" style={{ color: colors.gold }}>{label}</Text>
       {children}
     </View>
   );
 }
 
 function LightInput(props: any) {
+  const { colors } = useAppTheme();
   return (
-    <View className="overflow-hidden rounded-xl border border-[#E8E8E8] bg-[#F8F8F6]">
+    <View className="overflow-hidden rounded-xl border" style={{ borderColor: colors.border, backgroundColor: colors.bgSecondary }}>
       <Input
-        className="border-0 bg-transparent px-4 py-3 text-[#1A1A1A]"
-        placeholderTextColor="#BBBBBB"
+        className="border-0 bg-transparent px-4 py-3"
+        style={{ color: colors.text }}
+        placeholderTextColor={colors.textDisabled}
         {...props}
       />
     </View>

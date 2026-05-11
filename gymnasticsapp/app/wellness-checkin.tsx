@@ -4,15 +4,15 @@ import { api, useMutation, useQuery } from "@/lib/demoData";
 import { Text, Input, SafeAreaView, Spinner } from "@/components/ui";
 import { useRouter } from "expo-router";
 import { Activity, ChevronLeft, Heart, Smile, Thermometer, Zap } from "lucide-react-native";
+import { useAppTheme } from "@/lib/appTheme";
 
 const EMOJIS_SORENESS = ["😄", "🙂", "😐", "😣", "🔥"];
 const EMOJIS_ENERGY   = ["😴", "🥱", "⚡", "💪", "🚀"];
 const EMOJIS_MOOD     = ["😤", "😔", "😐", "😊", "🎯"];
 
-const SHADOW = { shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 8, elevation: 3 };
-
 export default function WellnessCheckin() {
   const router = useRouter();
+  const { colors } = useAppTheme();
   const gymnast = useQuery(api.gymnasts.getGymnast);
   const logWellness = useMutation(api.gymnasts.logWellness);
   const [loading, setLoading] = useState(false);
@@ -21,8 +21,8 @@ export default function WellnessCheckin() {
   const [mood, setMood] = useState(4);
   const [notes, setNotes] = useState("");
 
-  if (gymnast === undefined) return <View className="flex-1 bg-white items-center justify-center"><Spinner /></View>;
-  if (gymnast === null) return <View className="flex-1 bg-white items-center justify-center"><Text className="text-[#1A1A1A]">Gymnast not found</Text></View>;
+  if (gymnast === undefined) return <View className="flex-1 items-center justify-center" style={{ backgroundColor: colors.bg }}><Spinner /></View>;
+  if (gymnast === null) return <View className="flex-1 items-center justify-center" style={{ backgroundColor: colors.bg }}><Text style={{ color: colors.text }}>Gymnast not found</Text></View>;
 
   const handleSave = async () => {
     setLoading(true);
@@ -39,21 +39,22 @@ export default function WellnessCheckin() {
   const overallScore = Math.round(((6 - soreness) + energy + mood) / 3);
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
+    <SafeAreaView className="flex-1" style={{ backgroundColor: colors.bg }} edges={["top"]}>
       {/* Header */}
-      <View className="px-4 pt-4 pb-3 flex-row items-center gap-3 border-b border-[#E8E8E8]">
+      <View className="px-4 pt-4 pb-3 flex-row items-center gap-3 border-b" style={{ borderColor: colors.border }}>
         <Pressable
           onPress={() => router.back()}
-          className="h-11 w-11 items-center justify-center rounded-full bg-[#F0F0EE]"
+          className="h-11 w-11 items-center justify-center rounded-full"
+          style={{ backgroundColor: colors.backBtnBg }}
         >
-          <ChevronLeft size={22} color="#444444" />
+          <ChevronLeft size={22} color={colors.backBtnIcon} />
         </Pressable>
         <View className="flex-1">
-          <Text className="text-[10px] font-black uppercase tracking-widest text-[#D4A843]">Recovery Lab</Text>
-          <Text className="text-2xl font-black text-[#1A1A1A]">Daily Scout Snapshot</Text>
+          <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.gold }}>Recovery Lab</Text>
+          <Text className="text-2xl font-black" style={{ color: colors.text }}>Daily Scout Snapshot</Text>
         </View>
-        <View className="h-11 w-11 items-center justify-center rounded-full bg-[#F0FDF4]">
-          <Heart size={20} color="#16A34A" />
+        <View className="h-11 w-11 items-center justify-center rounded-full" style={{ backgroundColor: colors.greenBg }}>
+          <Heart size={20} color={colors.green} />
         </View>
       </View>
 
@@ -64,7 +65,7 @@ export default function WellnessCheckin() {
           contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 80 }}
         >
           {/* Scout reading card */}
-          <View className="mb-5 overflow-hidden rounded-2xl bg-[#1A1A2E] p-5">
+          <View className="mb-5 overflow-hidden rounded-2xl p-5" style={{ backgroundColor: colors.hero }}>
             <View className="absolute top-0 right-0 h-28 w-28 rounded-full bg-[#D4A843]/10" />
             <View className="flex-row items-center gap-4">
               <View className="h-16 w-16 items-center justify-center rounded-2xl bg-white/10">
@@ -73,11 +74,11 @@ export default function WellnessCheckin() {
                 </Text>
               </View>
               <View className="flex-1">
-                <Text className="text-[10px] font-black uppercase tracking-widest text-[#D4A843]">Scout Reading</Text>
-                <Text className="text-lg font-black text-white">
+                <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.gold }}>Scout Reading</Text>
+                <Text className="text-lg font-black" style={{ color: colors.heroText }}>
                   {overallScore >= 4 ? "Ready to Train Hard" : overallScore >= 3 ? "Moderate Readiness" : "Recovery Day Recommended"}
                 </Text>
-                <Text className="text-xs text-[#9999BB] mt-0.5">Log how {gymnast.name} feels right now</Text>
+                <Text className="text-xs mt-0.5" style={{ color: colors.heroSubtext }}>Log how {gymnast.name} feels right now</Text>
               </View>
             </View>
           </View>
@@ -112,22 +113,23 @@ export default function WellnessCheckin() {
             icon={<Smile size={18} color="#BE185D" />}
           />
 
-          <View className="mb-6 rounded-2xl bg-white p-4" style={SHADOW}>
+          <View className="mb-6 rounded-2xl p-4" style={[colors.shadow, { backgroundColor: colors.surface }]}>
             <View className="flex-row items-center gap-2 mb-3">
-              <Activity size={18} color="#D4A843" />
-              <Text className="font-black text-[#1A1A1A]">Practice Notes</Text>
+              <Activity size={18} color={colors.gold} />
+              <Text className="font-black" style={{ color: colors.text }}>Practice Notes</Text>
             </View>
-            <View className="overflow-hidden rounded-xl border border-[#E8E8E8] bg-[#F8F8F6]">
+            <View className="overflow-hidden rounded-xl border" style={{ borderColor: colors.border, backgroundColor: colors.bgSecondary }}>
               <Input
                 placeholder="How was today's practice? Any soreness spots?"
                 value={notes}
                 onChangeText={setNotes}
                 multiline
-                className="h-28 border-0 bg-transparent p-4 text-[#1A1A1A]"
-                placeholderTextColor="#BBBBBB"
+                className="h-28 border-0 bg-transparent p-4"
+                style={{ color: colors.text }}
+                placeholderTextColor={colors.textDisabled}
               />
             </View>
-            <Text className="mt-2 text-[10px] font-bold uppercase text-[#888888]">
+            <Text className="mt-2 text-[10px] font-bold uppercase" style={{ color: colors.textMuted }}>
               Tip: Note specific areas of tightness or wins from today.
             </Text>
           </View>
@@ -135,9 +137,10 @@ export default function WellnessCheckin() {
           <Pressable
             onPress={handleSave}
             disabled={loading}
-            className="overflow-hidden rounded-2xl bg-[#D4A843] py-4 items-center"
+            className="overflow-hidden rounded-2xl py-4 items-center"
+            style={{ backgroundColor: colors.gold }}
           >
-            {loading ? <Spinner /> : <Text className="font-black text-[#1A1A1A] text-base">Save Scout Report</Text>}
+            {loading ? <Spinner /> : <Text className="font-black text-base" style={{ color: "#1A1A1A" }}>Save Scout Report</Text>}
           </Pressable>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -156,13 +159,14 @@ function RatingSection({
   accentColor: string;
   icon: React.ReactNode;
 }) {
+  const { colors } = useAppTheme();
   return (
-    <View className="mb-4 rounded-2xl bg-white p-4" style={SHADOW}>
+    <View className="mb-4 rounded-2xl p-4" style={[colors.shadow, { backgroundColor: colors.surface }]}>
       <View className="flex-row items-center gap-2 mb-1">
         {icon}
-        <Text className="font-black text-[#1A1A1A]">{label}</Text>
+        <Text className="font-black" style={{ color: colors.text }}>{label}</Text>
       </View>
-      <Text className="text-[10px] font-bold uppercase text-[#888888] mb-4">{sublabel}</Text>
+      <Text className="text-[10px] font-bold uppercase mb-4" style={{ color: colors.textMuted }}>{sublabel}</Text>
       <View className="flex-row gap-2">
         {[1, 2, 3, 4, 5].map((val) => (
           <RatingButton
@@ -188,6 +192,7 @@ function RatingButton({
   accentColor: string;
   onPress: () => void;
 }) {
+  const { colors } = useAppTheme();
   const scale = useRef(new Animated.Value(1)).current;
 
   const handlePress = () => {
@@ -210,13 +215,13 @@ function RatingButton({
             alignItems: "center",
             justifyContent: "center",
             borderWidth: selected ? 2 : 1,
-            borderColor: selected ? accentColor : "#E8E8E8",
-            backgroundColor: selected ? `${accentColor}15` : "#F8F8F6",
+            borderColor: selected ? accentColor : colors.border,
+            backgroundColor: selected ? `${accentColor}15` : colors.bgSecondary,
           },
         ]}
       >
         <Text style={{ fontSize: 20 }}>{emoji}</Text>
-        <Text style={{ fontSize: 10, fontWeight: "900", color: selected ? accentColor : "#AAAAAA", marginTop: 2 }}>
+        <Text style={{ fontSize: 10, fontWeight: "900", color: selected ? accentColor : colors.textDisabled, marginTop: 2 }}>
           {val}
         </Text>
       </Animated.View>
