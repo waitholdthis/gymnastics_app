@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Alert, Linking, Platform, Pressable, ScrollView, View } from "react-native";
 import { api, useQuery } from "@/lib/demoData";
-import { Text, Input, SafeAreaView, Spinner, Badge } from "@/components/ui";
+import { Text, Input, SafeAreaView, Spinner } from "@/components/ui";
 import {
   BookOpen,
-  ChevronLeft,
   ChevronRight,
   Compass,
   ExternalLink,
@@ -17,11 +16,13 @@ import {
 const APPARATUS_LIST = ["Vault", "Bars", "Beam", "Floor"] as const;
 
 const APPARATUS_THEME: Record<string, { color: string; bg: string }> = {
-  Vault: { color: "#FB923C", bg: "#FB923C20" },
-  Bars:  { color: "#8FE7FF", bg: "#8FE7FF20" },
-  Beam:  { color: "#F472B6", bg: "#F472B620" },
-  Floor: { color: "#65F4A3", bg: "#65F4A320" },
+  Vault: { color: "#C2500A", bg: "#FFF0E8" },
+  Bars:  { color: "#1D5BB5", bg: "#EFF6FF" },
+  Beam:  { color: "#BE185D", bg: "#FDF2F8" },
+  Floor: { color: "#16A34A", bg: "#F0FDF4" },
 };
+
+const SHADOW = { shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 8, elevation: 3 };
 
 const GET_GUIDE_CONTENT = (title: string) => {
   const normalizedTitle = title.trim();
@@ -128,25 +129,25 @@ export default function ExploreScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-[#061528]" edges={["top"]}>
-      <View className="px-4 pt-5 pb-3">
-        <View className="flex-row items-center gap-3 mb-1">
-          <View className="h-10 w-10 items-center justify-center rounded-full border border-[#8FE7FF]/30 bg-[#8FE7FF]/10">
-            <Compass size={20} color="#8FE7FF" />
-          </View>
-          <View>
-            <Text className="text-[11px] font-black uppercase tracking-widest text-[#8FE7FF]">Knowledge Hub</Text>
-            <Text className="text-2xl font-black text-[#F8FAFC]">Atlas</Text>
-          </View>
+    <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
+      {/* Nav */}
+      <View className="flex-row items-center gap-3 px-4 pt-4 pb-3 border-b border-[#E8E8E8]">
+        <View className="h-10 w-10 items-center justify-center rounded-full bg-[#FDF6E3]">
+          <Compass size={20} color="#D4A843" />
+        </View>
+        <View>
+          <Text className="text-[10px] font-black uppercase tracking-widest text-[#D4A843]">Knowledge Hub</Text>
+          <Text className="text-xl font-black text-[#1A1A1A]">Atlas</Text>
         </View>
       </View>
 
-      <View className="mx-4 mb-4 overflow-hidden rounded-2xl border border-white/10 bg-[#0A1B33] flex-row items-center px-3">
-        <Search size={18} color="#4B6080" />
+      {/* Search */}
+      <View className="mx-4 mt-3 mb-2 overflow-hidden rounded-xl border border-[#E8E8E8] bg-[#F8F8F6] flex-row items-center px-3">
+        <Search size={16} color="#AAAAAA" />
         <Input
           placeholder="Search skills, terms, or rules..."
-          className="flex-1 border-0 bg-transparent h-12 text-[#F8FAFC]"
-          placeholderTextColor="#4B6080"
+          className="flex-1 border-0 bg-transparent h-11 text-[#1A1A1A]"
+          placeholderTextColor="#BBBBBB"
           value={searchQuery}
           onChangeText={setSearchQuery}
           autoCapitalize="none"
@@ -154,27 +155,28 @@ export default function ExploreScreen() {
         />
         {searchQuery.length > 0 && (
           <Pressable onPress={() => setSearchQuery("")}>
-            <X size={18} color="#4B6080" />
+            <X size={16} color="#AAAAAA" />
           </Pressable>
         )}
       </View>
 
-      <View className="mb-5">
+      {/* Filter chips */}
+      <View className="mb-3">
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 16, gap: 8 }}
+          contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8, gap: 8 }}
         >
           <Pressable
             onPress={() => setSelectedApparatus(null)}
             className="rounded-full px-4 py-2"
             style={{
-              backgroundColor: !selectedApparatus ? "#F6C45325" : "#0A1B33",
+              backgroundColor: !selectedApparatus ? "#FDF6E3" : "#F8F8F6",
               borderWidth: 1,
-              borderColor: !selectedApparatus ? "#F6C453" : "rgba(255,255,255,0.1)",
+              borderColor: !selectedApparatus ? "#D4A843" : "#E8E8E8",
             }}
           >
-            <Text className="font-black text-sm" style={{ color: !selectedApparatus ? "#F6C453" : "#94A3B8" }}>
+            <Text className="font-black text-sm" style={{ color: !selectedApparatus ? "#D4A843" : "#888888" }}>
               All Gear
             </Text>
           </Pressable>
@@ -187,12 +189,12 @@ export default function ExploreScreen() {
                 onPress={() => setSelectedApparatus(app)}
                 className="rounded-full px-4 py-2"
                 style={{
-                  backgroundColor: isSelected ? theme.bg : "#0A1B33",
+                  backgroundColor: isSelected ? theme.bg : "#F8F8F6",
                   borderWidth: 1,
-                  borderColor: isSelected ? theme.color : "rgba(255,255,255,0.1)",
+                  borderColor: isSelected ? theme.color : "#E8E8E8",
                 }}
               >
-                <Text className="font-black text-sm" style={{ color: isSelected ? theme.color : "#94A3B8" }}>
+                <Text className="font-black text-sm" style={{ color: isSelected ? theme.color : "#888888" }}>
                   {app}
                 </Text>
               </Pressable>
@@ -210,21 +212,21 @@ export default function ExploreScreen() {
               <View className="py-10 items-center"><Spinner /></View>
             ) : filteredSkills.length === 0 && filteredGlossary.length === 0 ? (
               <View className="items-center py-20">
-                <Text className="text-[#94A3B8] text-center">No matches found for "{searchQuery}"</Text>
+                <Text className="text-[#888888] text-center">No matches found for "{searchQuery}"</Text>
               </View>
             ) : (
               <>
                 {filteredGlossary.length > 0 && (
                   <View className="mb-2">
-                    <Text className="text-[11px] font-black uppercase tracking-widest text-[#F6C453] mb-3">Glossary Matches</Text>
+                    <SectionLabel label="Glossary Matches" />
                     {filteredGlossary.map((item, idx) => (
                       <View
                         key={`glossary-${idx}`}
-                        className="mb-2 rounded-2xl bg-[#0A1B33] p-4"
-                        style={{ borderWidth: 1, borderColor: "#F6C45330" }}
+                        className="mb-2 rounded-2xl bg-white p-4"
+                        style={[SHADOW, { borderLeftWidth: 3, borderLeftColor: "#D4A843", borderWidth: 1, borderColor: "#F0F0EE" }]}
                       >
-                        <Text className="font-black text-[#F6C453] mb-1">{item.heading}</Text>
-                        <Text className="text-xs text-[#94A3B8] leading-4">{item.body}</Text>
+                        <Text className="font-black text-[#D4A843] mb-1">{item.heading}</Text>
+                        <Text className="text-xs text-[#888888] leading-4">{item.body}</Text>
                       </View>
                     ))}
                   </View>
@@ -232,39 +234,34 @@ export default function ExploreScreen() {
 
                 {filteredSkills.length > 0 && (
                   <View>
-                    {filteredGlossary.length > 0 && (
-                      <Text className="text-[11px] font-black uppercase tracking-widest text-[#8FE7FF] mb-3 mt-2">Skills</Text>
-                    )}
+                    {filteredGlossary.length > 0 && <SectionLabel label="Skills" />}
                     {filteredSkills.map((skill: any) => {
-                      const appTheme = APPARATUS_THEME[skill.apparatus] ?? { color: "#8FE7FF", bg: "#8FE7FF20" };
+                      const appTheme = APPARATUS_THEME[skill.apparatus] ?? { color: "#1D5BB5", bg: "#EFF6FF" };
                       return (
                         <View
                           key={skill._id}
-                          className="mb-3 rounded-2xl bg-[#0A1B33] p-4"
-                          style={{ borderWidth: 1, borderColor: `${appTheme.color}30` }}
+                          className="mb-3 rounded-2xl bg-white p-4"
+                          style={SHADOW}
                         >
                           <View className="flex-row items-start justify-between mb-2">
                             <View className="flex-1 pr-3">
-                              <Text className="font-black text-[#F8FAFC] text-base">{skill.name}</Text>
+                              <Text className="font-black text-[#1A1A1A] text-base">{skill.name}</Text>
                               <View className="flex-row items-center gap-2 mt-1">
-                                <Badge
-                                  className="border-0"
-                                  style={{ backgroundColor: appTheme.bg }}
-                                >
+                                <View className="rounded-full px-2.5 py-1" style={{ backgroundColor: appTheme.bg }}>
                                   <Text className="text-[10px] font-black uppercase" style={{ color: appTheme.color }}>{skill.apparatus}</Text>
-                                </Badge>
-                                <Text className="text-[10px] font-bold uppercase text-[#94A3B8]">Level {skill.level}</Text>
+                                </View>
+                                <Text className="text-[10px] font-bold uppercase text-[#AAAAAA]">Level {skill.level}</Text>
                               </View>
                             </View>
                             <Pressable
                               onPress={() => handleWatchVideo(skill.name)}
                               className="h-10 w-10 items-center justify-center rounded-full"
-                              style={{ backgroundColor: `${appTheme.color}20` }}
+                              style={{ backgroundColor: appTheme.bg }}
                             >
                               <PlayCircle size={22} color={appTheme.color} />
                             </Pressable>
                           </View>
-                          <Text className="text-xs text-[#94A3B8] leading-4">
+                          <Text className="text-xs text-[#888888] leading-4">
                             Technical Focus: Proper shoulder alignment and core tension are key for this milestone.
                           </Text>
                           <Pressable
@@ -288,31 +285,40 @@ export default function ExploreScreen() {
   );
 }
 
+function SectionLabel({ label }: { label: string }) {
+  return (
+    <View className="flex-row items-center gap-3 mb-3">
+      <Text className="text-[10px] font-black uppercase tracking-widest text-[#D4A843]">{label}</Text>
+      <View className="flex-1 h-px bg-[#E8E8E8]" />
+    </View>
+  );
+}
+
 function IntroductionSection({ onNavigate }: { onNavigate: (t: string) => void }) {
   return (
     <View className="gap-5 pb-28">
-      {/* Gym Dictionary */}
-      <View className="overflow-hidden rounded-[22px] border border-[#F6C453]/20 bg-[#0B1F3D] p-5">
-        <View className="absolute right-[-28px] top-[-28px] h-24 w-24 rounded-full bg-[#F6C453]/10" />
+      {/* Gym Dictionary — dark hero */}
+      <View className="overflow-hidden rounded-2xl bg-[#1A1A2E] p-5">
+        <View className="absolute top-0 right-0 h-32 w-32 rounded-full bg-[#D4A843]/10" />
         <View className="flex-row items-center gap-3 mb-2">
-          <BookOpen size={22} color="#F6C453" />
-          <Text className="font-black text-lg text-[#F8FAFC]">The Gym Dictionary</Text>
+          <BookOpen size={22} color="#D4A843" />
+          <Text className="font-black text-lg text-white">The Gym Dictionary</Text>
         </View>
-        <Text className="text-sm text-[#94A3B8] mb-4 leading-4">
+        <Text className="text-sm text-[#9999BB] mb-4 leading-4">
           Confused by what the coach is saying? Learn the language of the gym floor.
         </Text>
         <Pressable
           onPress={() => onNavigate("Glossary")}
-          className="flex-row items-center gap-2 self-start rounded-2xl border border-[#F6C453]/30 bg-[#F6C453]/15 px-4 py-2.5"
+          className="flex-row items-center gap-2 self-start rounded-xl bg-[#D4A843] px-4 py-2.5"
         >
-          <Text className="font-black text-[#F6C453]">Browse Glossary</Text>
-          <ChevronRight size={14} color="#F6C453" />
+          <Text className="font-black text-[#1A1A1A]">Browse Glossary</Text>
+          <ChevronRight size={14} color="#1A1A1A" />
         </Pressable>
       </View>
 
-      {/* Apparatus Worlds */}
+      {/* Apparatus grid */}
       <View>
-        <Text className="text-[11px] font-black uppercase tracking-widest text-[#8FE7FF] mb-3">Technical Foundations</Text>
+        <SectionLabel label="Technical Foundations" />
         <View className="flex-row flex-wrap gap-3">
           {APPARATUS_LIST.map((app) => {
             const theme = APPARATUS_THEME[app];
@@ -320,16 +326,23 @@ function IntroductionSection({ onNavigate }: { onNavigate: (t: string) => void }
               <Pressable
                 key={app}
                 onPress={() => onNavigate(app)}
-                className="min-w-[44%] flex-1 rounded-2xl p-4"
-                style={{ backgroundColor: "#0A1B33", borderWidth: 1, borderColor: `${theme.color}30` }}
+                className="min-w-[44%] flex-1 rounded-2xl bg-white p-4"
+                style={SHADOW}
               >
-                <View className="h-10 w-10 items-center justify-center rounded-xl mb-2" style={{ backgroundColor: theme.bg }}>
+                <View
+                  className="h-10 w-10 items-center justify-center rounded-xl mb-2"
+                  style={{ backgroundColor: theme.bg }}
+                >
                   <Text style={{ fontSize: 18 }}>{getApparatusEmoji(app)}</Text>
                 </View>
-                <Text className="font-black text-[#F8FAFC]">{app}</Text>
+                <Text className="font-black text-[#1A1A1A]">{app}</Text>
                 <Text className="text-[10px] font-bold uppercase mt-0.5" style={{ color: theme.color }}>
                   Master the techniques
                 </Text>
+                <View className="flex-row items-center gap-1 mt-2">
+                  <Text className="text-[10px] font-black uppercase text-[#D4A843]">Open</Text>
+                  <ChevronRight size={10} color="#D4A843" />
+                </View>
               </Pressable>
             );
           })}
@@ -338,24 +351,24 @@ function IntroductionSection({ onNavigate }: { onNavigate: (t: string) => void }
 
       {/* Essential Guides */}
       <View>
-        <Text className="text-[11px] font-black uppercase tracking-widest text-[#8FE7FF] mb-3">Essential Guides</Text>
+        <SectionLabel label="Essential Guides" />
         <View className="gap-2">
           <GuideItem
             title="Grips & Gear 101"
             description="When does your gymnast need grips? How to size them correctly."
-            color="#8FE7FF"
+            emoji="🧤"
             onPress={() => onNavigate("Grips & Gear 101")}
           />
           <GuideItem
             title="Understanding Deductions"
             description="Why did she lose points? A breakdown of common judging cues."
-            color="#F6C453"
+            emoji="📋"
             onPress={() => onNavigate("Understanding Deductions")}
           />
           <GuideItem
             title="Home Safety Rules"
             description="What skills should NEVER be practiced at home without a coach."
-            color="#F472B6"
+            emoji="🛡️"
             onPress={() => onNavigate("Home Safety Rules")}
           />
         </View>
@@ -364,23 +377,26 @@ function IntroductionSection({ onNavigate }: { onNavigate: (t: string) => void }
   );
 }
 
-function GuideItem({ title, description, color, onPress }: {
+function GuideItem({ title, description, emoji, onPress }: {
   title: string;
   description: string;
-  color: string;
+  emoji: string;
   onPress: () => void;
 }) {
   return (
     <Pressable
       onPress={onPress}
-      className="flex-row items-center gap-3 rounded-2xl bg-[#0A1B33] p-4"
-      style={{ borderWidth: 1, borderColor: `${color}25` }}
+      className="flex-row items-center gap-3 rounded-2xl bg-white p-4"
+      style={SHADOW}
     >
-      <View className="flex-1">
-        <Text className="font-black text-[#F8FAFC]">{title}</Text>
-        <Text className="text-xs text-[#94A3B8] mt-0.5 leading-4" numberOfLines={2}>{description}</Text>
+      <View className="h-11 w-11 items-center justify-center rounded-xl bg-[#F8F8F6]">
+        <Text style={{ fontSize: 20 }}>{emoji}</Text>
       </View>
-      <ChevronRight size={16} color={color} />
+      <View className="flex-1">
+        <Text className="font-black text-[#1A1A1A]">{title}</Text>
+        <Text className="text-xs text-[#888888] mt-0.5 leading-4" numberOfLines={2}>{description}</Text>
+      </View>
+      <ChevronRight size={16} color="#D4A843" />
     </Pressable>
   );
 }
@@ -389,36 +405,36 @@ function GuideDetailView({ title, onBack }: { title: string; onBack: () => void 
   const content = GET_GUIDE_CONTENT(title);
   const isApparatus = APPARATUS_LIST.includes(title as any);
   const appTheme = isApparatus ? APPARATUS_THEME[title] : null;
-  const accentColor = appTheme?.color ?? "#8FE7FF";
+  const accentColor = appTheme?.color ?? "#D4A843";
 
   return (
-    <SafeAreaView className="flex-1 bg-[#061528]" edges={["top"]}>
-      <View className="px-4 pt-6 pb-4 flex-row items-center gap-3">
+    <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
+      <View className="px-4 pt-4 pb-4 flex-row items-center gap-3 border-b border-[#E8E8E8]">
         <Pressable
           onPress={onBack}
-          className="h-11 w-11 items-center justify-center rounded-full bg-[#0B1F3D]"
+          className="h-11 w-11 items-center justify-center rounded-full bg-[#F0F0EE]"
         >
-          <ChevronLeft size={22} color="#F8FAFC" />
+          <Text style={{ fontSize: 18 }}>←</Text>
         </Pressable>
         <View className="flex-1">
-          <Text className="text-[11px] font-black uppercase tracking-widest" style={{ color: accentColor }}>Guide</Text>
-          <Text className="text-2xl font-black text-[#F8FAFC]">{title}</Text>
+          <Text className="text-[10px] font-black uppercase tracking-widest text-[#D4A843]">Guide</Text>
+          <Text className="text-2xl font-black text-[#1A1A1A]">{title}</Text>
         </View>
       </View>
-      <ScrollView className="flex-1 px-4" keyboardShouldPersistTaps="handled">
+      <ScrollView className="flex-1 px-4 pt-4" keyboardShouldPersistTaps="handled">
         <View className="gap-4 pb-28">
           {content.map((section, idx) => (
             <View
               key={idx}
-              className="rounded-2xl bg-[#0A1B33] p-4"
-              style={{ borderWidth: 1, borderLeftWidth: 3, borderColor: `${accentColor}20`, borderLeftColor: accentColor }}
+              className="rounded-2xl bg-white p-4"
+              style={[SHADOW, { borderLeftWidth: 3, borderLeftColor: accentColor }]}
             >
               <Text className="font-black mb-2" style={{ color: accentColor }}>{section.heading}</Text>
-              <Text className="text-sm text-[#C7D2FE] leading-5">{section.body}</Text>
+              <Text className="text-sm text-[#555555] leading-5">{section.body}</Text>
               {section.warning && (
-                <View className="flex-row items-start gap-2 mt-3 rounded-xl bg-[#F472B6]/10 p-3">
-                  <Info size={14} color="#F472B6" />
-                  <Text className="text-xs text-[#F472B6] font-bold flex-1 leading-4">{section.warning}</Text>
+                <View className="flex-row items-start gap-2 mt-3 rounded-xl bg-[#FFF0F0] p-3">
+                  <Info size={14} color="#E54B4B" />
+                  <Text className="text-xs text-[#E54B4B] font-bold flex-1 leading-4">{section.warning}</Text>
                 </View>
               )}
             </View>

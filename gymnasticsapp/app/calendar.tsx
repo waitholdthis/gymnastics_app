@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, View } from "react-native";
 import { api, useMutation, useQuery } from "@/lib/demoData";
-import { Text, Input, SafeAreaView, Spinner, Switch, Label } from "@/components/ui";
+import { Text, Input, SafeAreaView, Spinner, Switch } from "@/components/ui";
 import { useRouter } from "expo-router";
 import {
   Bell,
@@ -14,6 +14,8 @@ import {
   X,
 } from "lucide-react-native";
 
+const SHADOW = { shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 8, elevation: 3 };
+
 export default function CalendarScreen() {
   const router = useRouter();
   const gymnast = useQuery(api.gymnasts.getGymnast);
@@ -21,94 +23,97 @@ export default function CalendarScreen() {
   const [isAdding, setIsAdding] = useState(false);
 
   if (gymnast === undefined || (gymnast !== null && schedules === undefined))
-    return <View className="flex-1 bg-[#061528] items-center justify-center"><Spinner /></View>;
+    return <View className="flex-1 bg-white items-center justify-center"><Spinner /></View>;
   if (gymnast === null)
-    return <View className="flex-1 bg-[#061528] items-center justify-center"><Text className="text-[#F8FAFC]">Gymnast not found</Text></View>;
+    return <View className="flex-1 bg-white items-center justify-center"><Text className="text-[#1A1A1A]">Gymnast not found</Text></View>;
 
   const upcomingMeets = schedules?.filter((s: any) => s.type === "meet") ?? [];
   const practices = schedules?.filter((s: any) => s.type === "practice") ?? [];
 
   return (
-    <SafeAreaView className="flex-1 bg-[#061528]" edges={["top"]}>
-      <View className="px-4 pt-6 pb-4 flex-row items-center justify-between">
+    <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
+      {/* Header */}
+      <View className="px-4 pt-4 pb-3 flex-row items-center justify-between border-b border-[#E8E8E8]">
         <View className="flex-row items-center gap-3">
           <Pressable
             onPress={() => router.back()}
-            className="h-11 w-11 items-center justify-center rounded-full bg-[#0B1F3D]"
+            className="h-11 w-11 items-center justify-center rounded-full bg-[#F0F0EE]"
           >
-            <ChevronLeft size={22} color="#F8FAFC" />
+            <ChevronLeft size={22} color="#444444" />
           </Pressable>
           <View>
-            <Text className="text-[11px] font-black uppercase tracking-widest text-[#8FE7FF]">Season Schedule</Text>
-            <Text className="text-2xl font-black text-[#F8FAFC]">Training Calendar</Text>
+            <Text className="text-[10px] font-black uppercase tracking-widest text-[#D4A843]">Season Schedule</Text>
+            <Text className="text-2xl font-black text-[#1A1A1A]">Training Calendar</Text>
           </View>
         </View>
         {!isAdding && (
           <Pressable
             onPress={() => setIsAdding(true)}
-            className="h-11 w-11 items-center justify-center rounded-full bg-[#8FE7FF]"
+            className="h-11 w-11 items-center justify-center rounded-full bg-[#D4A843]"
           >
-            <Plus size={20} color="#061528" />
+            <Plus size={20} color="#1A1A1A" />
           </Pressable>
         )}
       </View>
 
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
-      <ScrollView className="flex-1 px-4" keyboardShouldPersistTaps="handled">
-        {isAdding ? (
-          <AddScheduleForm gymnastId={gymnast._id} onCancel={() => setIsAdding(false)} />
-        ) : schedules?.length === 0 ? (
-          <View className="items-center py-24">
-            <View className="h-20 w-20 items-center justify-center rounded-full bg-[#8FE7FF]/10 mb-5">
-              <CalendarIcon size={40} color="#8FE7FF" />
+        <ScrollView className="flex-1 px-4 pt-4" keyboardShouldPersistTaps="handled">
+          {isAdding ? (
+            <AddScheduleForm gymnastId={gymnast._id} onCancel={() => setIsAdding(false)} />
+          ) : schedules?.length === 0 ? (
+            <View className="items-center py-24">
+              <View className="h-20 w-20 items-center justify-center rounded-full bg-[#EFF6FF] mb-5">
+                <CalendarIcon size={40} color="#1D5BB5" />
+              </View>
+              <Text className="text-xl font-black text-[#1A1A1A] mb-2">Schedule is Clear</Text>
+              <Text className="text-sm text-center text-[#888888] leading-5">
+                Add a practice or meet to start building your season timeline.
+              </Text>
             </View>
-            <Text className="text-xl font-black text-[#F8FAFC] mb-2">Schedule is Clear</Text>
-            <Text className="text-sm text-center text-[#94A3B8] leading-5">
-              Add a practice or meet to start building your season timeline.
-            </Text>
-          </View>
-        ) : (
-          <View className="pb-20 gap-6">
-            {upcomingMeets.length > 0 && (
-              <View>
-                <View className="flex-row items-center gap-2 mb-3">
-                  <View className="h-2 w-2 rounded-full bg-[#F6C453]" />
-                  <Text className="text-[11px] font-black uppercase tracking-widest text-[#F6C453]">Competition Dates</Text>
+          ) : (
+            <View className="pb-20 gap-6">
+              {upcomingMeets.length > 0 && (
+                <View>
+                  <SectionLabel label="Competition Dates" />
+                  <View className="gap-3">
+                    {upcomingMeets.map((item: any) => (
+                      <ScheduleCard key={item._id} item={item} />
+                    ))}
+                  </View>
                 </View>
-                <View className="gap-3">
-                  {upcomingMeets.map((item: any) => (
-                    <ScheduleCard key={item._id} item={item} />
-                  ))}
-                </View>
-              </View>
-            )}
+              )}
 
-            {practices.length > 0 && (
-              <View>
-                <View className="flex-row items-center gap-2 mb-3">
-                  <View className="h-2 w-2 rounded-full bg-[#8FE7FF]" />
-                  <Text className="text-[11px] font-black uppercase tracking-widest text-[#8FE7FF]">Training Sessions</Text>
+              {practices.length > 0 && (
+                <View>
+                  <SectionLabel label="Training Sessions" />
+                  <View className="gap-3">
+                    {practices.map((item: any) => (
+                      <ScheduleCard key={item._id} item={item} />
+                    ))}
+                  </View>
                 </View>
-                <View className="gap-3">
-                  {practices.map((item: any) => (
-                    <ScheduleCard key={item._id} item={item} />
-                  ))}
-                </View>
-              </View>
-            )}
-          </View>
-        )}
-      </ScrollView>
+              )}
+            </View>
+          )}
+        </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
+function SectionLabel({ label }: { label: string }) {
+  return (
+    <View className="flex-row items-center gap-3 mb-3">
+      <Text className="text-[10px] font-black uppercase tracking-widest text-[#D4A843]">{label}</Text>
+      <View className="flex-1 h-px bg-[#E8E8E8]" />
+    </View>
+  );
+}
+
 function ScheduleCard({ item }: { item: any }) {
   const isMeet = item.type === "meet";
-  const accentColor = isMeet ? "#F6C453" : "#8FE7FF";
-  const bgColor = isMeet ? "#2F2810" : "#0A1B33";
-  const borderColor = isMeet ? "#F6C45340" : "#8FE7FF30";
+  const accentColor = isMeet ? "#D4A843" : "#1D5BB5";
+  const accentBg = isMeet ? "#FDF6E3" : "#EFF6FF";
 
   const dateObj = new Date(item.date);
   const dayName = dateObj.toLocaleDateString("en-US", { weekday: "short" });
@@ -117,12 +122,12 @@ function ScheduleCard({ item }: { item: any }) {
 
   return (
     <View
-      className="overflow-hidden rounded-[22px] p-4 flex-row gap-4"
-      style={{ backgroundColor: bgColor, borderWidth: 1, borderColor }}
+      className="overflow-hidden rounded-2xl bg-white flex-row gap-4 p-4"
+      style={[SHADOW, { borderLeftWidth: 3, borderLeftColor: accentColor }]}
     >
       <View
-        className="items-center justify-center rounded-2xl px-3 py-2 min-w-[52px]"
-        style={{ backgroundColor: `${accentColor}20` }}
+        className="items-center justify-center rounded-xl px-3 py-2 min-w-[52px]"
+        style={{ backgroundColor: accentBg }}
       >
         <Text className="text-[10px] font-black uppercase" style={{ color: accentColor }}>{dayName}</Text>
         <Text className="text-2xl font-black" style={{ color: accentColor }}>{dayNum}</Text>
@@ -131,10 +136,7 @@ function ScheduleCard({ item }: { item: any }) {
 
       <View className="flex-1">
         <View className="flex-row items-center gap-2 mb-1">
-          <View
-            className="rounded-full px-2 py-0.5"
-            style={{ backgroundColor: `${accentColor}25` }}
-          >
+          <View className="rounded-full px-2 py-0.5" style={{ backgroundColor: accentBg }}>
             <Text className="text-[9px] font-black uppercase" style={{ color: accentColor }}>
               {isMeet ? "Competition" : "Practice"}
             </Text>
@@ -142,18 +144,18 @@ function ScheduleCard({ item }: { item: any }) {
           {item.reminderEnabled ? (
             <Bell size={12} color={accentColor} />
           ) : (
-            <BellOff size={12} color="#4B6080" />
+            <BellOff size={12} color="#AAAAAA" />
           )}
         </View>
-        <Text className="text-base font-black text-[#F8FAFC] mb-1">{item.title}</Text>
+        <Text className="text-base font-black text-[#1A1A1A] mb-1">{item.title}</Text>
         <View className="flex-row items-center gap-1">
-          <Clock size={11} color="#94A3B8" />
-          <Text className="text-[11px] text-[#94A3B8]">{item.startTime} – {item.endTime}</Text>
+          <Clock size={11} color="#888888" />
+          <Text className="text-[11px] text-[#888888]">{item.startTime} – {item.endTime}</Text>
         </View>
         {item.location && (
           <View className="flex-row items-center gap-1 mt-1">
-            <MapPin size={11} color="#94A3B8" />
-            <Text className="text-[11px] text-[#94A3B8] flex-1" numberOfLines={1}>{item.location}</Text>
+            <MapPin size={11} color="#888888" />
+            <Text className="text-[11px] text-[#888888] flex-1" numberOfLines={1}>{item.location}</Text>
           </View>
         )}
       </View>
@@ -200,91 +202,88 @@ function AddScheduleForm({ gymnastId, onCancel }: { gymnastId: any; onCancel: ()
   };
 
   const isMeet = form.type === "meet";
+  const accentColor = isMeet ? "#D4A843" : "#1D5BB5";
 
   return (
     <View className="pb-20">
       <View className="flex-row items-center justify-between mb-5">
-        <Text className="text-xl font-black text-[#F8FAFC]">Add Event</Text>
-        <Pressable onPress={onCancel} className="h-11 w-11 items-center justify-center rounded-full bg-[#0A1B33]">
-          <X size={18} color="#94A3B8" />
+        <Text className="text-xl font-black text-[#1A1A1A]">Add Event</Text>
+        <Pressable onPress={onCancel} className="h-11 w-11 items-center justify-center rounded-full bg-[#F0F0EE]">
+          <X size={18} color="#555555" />
         </Pressable>
       </View>
 
       <FormSection label="Event Type">
         <View className="flex-row gap-2">
-          {(["practice", "meet"] as const).map((type) => (
-            <Pressable
-              key={type}
-              onPress={() => setForm({ ...form, type })}
-              className="flex-1 items-center py-3 rounded-2xl"
-              style={{
-                backgroundColor: form.type === type ? (type === "meet" ? "#F6C453" : "#8FE7FF") : "#0A1B33",
-                borderWidth: 1,
-                borderColor: form.type === type ? "transparent" : "rgba(255,255,255,0.1)",
-              }}
-            >
-              <Text className="font-black capitalize" style={{ color: form.type === type ? "#061528" : "#94A3B8" }}>
-                {type === "meet" ? "Competition" : "Practice"}
-              </Text>
-            </Pressable>
-          ))}
+          {(["practice", "meet"] as const).map((type) => {
+            const isSelected = form.type === type;
+            const bg = isSelected ? (type === "meet" ? "#D4A843" : "#1D5BB5") : "#F8F8F6";
+            const textColor = isSelected ? (type === "meet" ? "#1A1A1A" : "#FFFFFF") : "#888888";
+            return (
+              <Pressable
+                key={type}
+                onPress={() => setForm({ ...form, type })}
+                className="flex-1 items-center py-3 rounded-xl"
+                style={{ backgroundColor: bg, borderWidth: 1, borderColor: isSelected ? "transparent" : "#E8E8E8" }}
+              >
+                <Text className="font-black capitalize" style={{ color: textColor }}>
+                  {type === "meet" ? "Competition" : "Practice"}
+                </Text>
+              </Pressable>
+            );
+          })}
         </View>
       </FormSection>
 
       <FormSection label="Event Title">
-        <DarkInput
+        <LightInput
           placeholder={isMeet ? "States Invitational" : "Team Practice"}
           value={form.title}
           onChangeText={(t: string) => setForm({ ...form, title: t })}
-          accentColor={isMeet ? "#F6C453" : "#8FE7FF"}
         />
       </FormSection>
 
       <FormSection label="Date (YYYY-MM-DD)">
-        <DarkInput
+        <LightInput
           placeholder="2026-05-18"
           value={form.date}
           onChangeText={(t: string) => setForm({ ...form, date: t })}
-          accentColor={isMeet ? "#F6C453" : "#8FE7FF"}
         />
       </FormSection>
 
       <FormSection label="Time Window">
         <View className="flex-row gap-3">
           <View className="flex-1">
-            <Text className="text-[10px] font-black uppercase text-[#94A3B8] mb-1">Start</Text>
-            <DarkInput
+            <Text className="text-[10px] font-black uppercase text-[#888888] mb-1">Start</Text>
+            <LightInput
               placeholder="16:00"
               value={form.startTime}
               onChangeText={(t: string) => setForm({ ...form, startTime: t })}
-              accentColor={isMeet ? "#F6C453" : "#8FE7FF"}
             />
           </View>
           <View className="flex-1">
-            <Text className="text-[10px] font-black uppercase text-[#94A3B8] mb-1">End</Text>
-            <DarkInput
+            <Text className="text-[10px] font-black uppercase text-[#888888] mb-1">End</Text>
+            <LightInput
               placeholder="19:00"
               value={form.endTime}
               onChangeText={(t: string) => setForm({ ...form, endTime: t })}
-              accentColor={isMeet ? "#F6C453" : "#8FE7FF"}
             />
           </View>
         </View>
       </FormSection>
 
       <FormSection label="Location (optional)">
-        <DarkInput
+        <LightInput
           placeholder="Main Gym Floor"
           value={form.location}
           onChangeText={(t: string) => setForm({ ...form, location: t })}
-          accentColor={isMeet ? "#F6C453" : "#8FE7FF"}
         />
       </FormSection>
 
-      <View className="flex-row items-center justify-between mb-6 rounded-2xl border border-white/10 bg-[#0A1B33] p-4">
+      <View className="flex-row items-center justify-between mb-6 rounded-2xl border border-[#E8E8E8] bg-white p-4" style={SHADOW}>
         <View>
-          <Text className="font-black text-[#F8FAFC]">Enable Reminder</Text>
-          <Text className="text-[11px] text-[#94A3B8]">Notify me before this event</Text>
+          <Text className="font-black text-[#1A1A1A]">Enable Reminder</Text>
+          <Text className="text-[11px] text-[#888888]">Notify me before this event</Text>
         </View>
         <Switch
           checked={form.reminderEnabled}
@@ -293,19 +292,16 @@ function AddScheduleForm({ gymnastId, onCancel }: { gymnastId: any; onCancel: ()
       </View>
 
       <View className="flex-row gap-3">
-        <Pressable
-          onPress={onCancel}
-          className="flex-1 items-center rounded-2xl border border-white/10 py-4"
-        >
-          <Text className="font-black text-[#94A3B8]">Cancel</Text>
+        <Pressable onPress={onCancel} className="flex-1 items-center rounded-xl border border-[#E8E8E8] py-4">
+          <Text className="font-black text-[#888888]">Cancel</Text>
         </Pressable>
         <Pressable
           onPress={handleSubmit}
           disabled={loading}
-          className="flex-[2] items-center rounded-2xl py-4"
-          style={{ backgroundColor: isMeet ? "#F6C453" : "#8FE7FF" }}
+          className="flex-[2] items-center rounded-xl py-4"
+          style={{ backgroundColor: accentColor }}
         >
-          {loading ? <Spinner /> : <Text className="font-black text-[#061528]">Save Event</Text>}
+          {loading ? <Spinner /> : <Text className="font-black" style={{ color: isMeet ? "#1A1A1A" : "#FFFFFF" }}>Save Event</Text>}
         </Pressable>
       </View>
     </View>
@@ -315,21 +311,18 @@ function AddScheduleForm({ gymnastId, onCancel }: { gymnastId: any; onCancel: ()
 function FormSection({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <View className="mb-4">
-      <Text className="text-[11px] font-black uppercase tracking-widest text-[#8FE7FF] mb-2">{label}</Text>
+      <Text className="text-[10px] font-black uppercase tracking-widest text-[#D4A843] mb-2">{label}</Text>
       {children}
     </View>
   );
 }
 
-function DarkInput({ accentColor = "#8FE7FF", ...props }: any) {
+function LightInput(props: any) {
   return (
-    <View
-      className="overflow-hidden rounded-2xl bg-[#0A1B33]"
-      style={{ borderWidth: 1, borderColor: `${accentColor}25` }}
-    >
+    <View className="overflow-hidden rounded-xl border border-[#E8E8E8] bg-[#F8F8F6]">
       <Input
-        className="border-0 bg-transparent px-4 py-3 text-[#F8FAFC]"
-        placeholderTextColor="#4B6080"
+        className="border-0 bg-transparent px-4 py-3 text-[#1A1A1A]"
+        placeholderTextColor="#BBBBBB"
         {...props}
       />
     </View>

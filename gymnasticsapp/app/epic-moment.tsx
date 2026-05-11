@@ -4,7 +4,6 @@ import {
   ChevronLeft,
   Film,
   Play,
-  Plus,
   Share,
   Trash2,
   Upload,
@@ -15,6 +14,8 @@ import { Alert, Animated, Pressable, ScrollView, View } from "react-native";
 import { api, useMutation, useQuery } from "@/lib/demoData";
 import { Input, SafeAreaView, Spinner, Text } from "@/components/ui";
 import { Video, ResizeMode } from "expo-av";
+
+const SHADOW = { shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 8, elevation: 3 };
 
 export default function EpicMoment() {
   const router = useRouter();
@@ -27,9 +28,9 @@ export default function EpicMoment() {
   const [activeReel, setActiveReel] = useState<string | null>(null);
 
   if (gymnast === undefined || reels === undefined)
-    return <View className="flex-1 bg-[#061528] items-center justify-center"><Spinner /></View>;
+    return <View className="flex-1 bg-white items-center justify-center"><Spinner /></View>;
   if (gymnast === null)
-    return <View className="flex-1 bg-[#061528] items-center justify-center"><Text className="text-[#F8FAFC]">Gymnast not found</Text></View>;
+    return <View className="flex-1 bg-white items-center justify-center"><Text className="text-[#1A1A1A]">Gymnast not found</Text></View>;
 
   const handlePickVideo = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -56,12 +57,7 @@ export default function EpicMoment() {
         ? `${Math.floor(durationSecs / 60)}:${String(durationSecs % 60).padStart(2, "0")}`
         : undefined;
 
-      await addReel({
-        gymnastId: gymnast._id,
-        uri: asset.uri,
-        title: "Epic Moment",
-        duration: durationLabel,
-      });
+      await addReel({ gymnastId: gymnast._id, uri: asset.uri, title: "Epic Moment", duration: durationLabel });
     } catch (e) {
       console.error(e);
       Alert.alert("Upload Failed", "Something went wrong. Please try again.");
@@ -94,12 +90,7 @@ export default function EpicMoment() {
         ? `${Math.floor(durationSecs / 60)}:${String(durationSecs % 60).padStart(2, "0")}`
         : undefined;
 
-      await addReel({
-        gymnastId: gymnast._id,
-        uri: asset.uri,
-        title: "Epic Moment",
-        duration: durationLabel,
-      });
+      await addReel({ gymnastId: gymnast._id, uri: asset.uri, title: "Epic Moment", duration: durationLabel });
     } catch (e) {
       console.error(e);
     } finally {
@@ -132,59 +123,56 @@ export default function EpicMoment() {
     );
   };
 
-  const handleRenameReel = (reelId: string, currentTitle: string) => {
-    // In a real app this would open an inline edit or alert with a text input
-    Alert.alert("Rename Reel", `Current name: "${currentTitle}"`);
-  };
-
   return (
-    <SafeAreaView className="flex-1 bg-[#061528]" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
       {/* Header */}
-      <View className="px-4 pt-6 pb-4 flex-row items-center gap-3">
+      <View className="px-4 pt-4 pb-3 flex-row items-center gap-3 border-b border-[#E8E8E8]">
         <Pressable
           onPress={() => router.back()}
-          className="h-11 w-11 items-center justify-center rounded-full bg-[#0B1F3D]"
+          className="h-11 w-11 items-center justify-center rounded-full bg-[#F0F0EE]"
         >
-          <ChevronLeft size={22} color="#F8FAFC" />
+          <ChevronLeft size={22} color="#444444" />
         </Pressable>
         <View className="flex-1">
-          <Text className="text-[11px] font-black uppercase tracking-widest text-[#F6C453]">Cinematic Vault</Text>
-          <Text className="text-2xl font-black text-[#F8FAFC]">Epic Moment Reels</Text>
+          <Text className="text-[10px] font-black uppercase tracking-widest text-[#D4A843]">Cinematic Vault</Text>
+          <Text className="text-2xl font-black text-[#1A1A1A]">Epic Moment Reels</Text>
         </View>
-        <View className="h-11 w-11 items-center justify-center rounded-full border border-[#F6C453]/30 bg-[#F6C453]/10">
-          <Film size={20} color="#F6C453" />
+        <View className="h-11 w-11 items-center justify-center rounded-full bg-[#FDF6E3]">
+          <Film size={20} color="#D4A843" />
         </View>
       </View>
 
-      <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+      <ScrollView className="flex-1 px-4 pt-4" showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         {/* Upload Actions */}
-        <View className="mb-5 flex-row gap-3">
+        <View className="mb-4 flex-row gap-3">
           <UploadButton
             label="Upload Clip"
             sublabel="From camera roll"
-            icon={<Upload size={20} color="#F6C453" />}
-            color="#F6C453"
+            icon={<Upload size={20} color="#D4A843" />}
+            color="#D4A843"
+            bg="#FDF6E3"
             loading={uploading}
             onPress={handlePickVideo}
           />
           <UploadButton
             label="Record Now"
             sublabel="Use camera"
-            icon={<Clapperboard size={20} color="#8FE7FF" />}
-            color="#8FE7FF"
+            icon={<Clapperboard size={20} color="#1D5BB5" />}
+            color="#1D5BB5"
+            bg="#EFF6FF"
             loading={false}
             onPress={handleRecordVideo}
           />
         </View>
 
         {/* Privacy Banner */}
-        <View className="mb-5 flex-row items-start gap-3 rounded-2xl border border-[#65F4A3]/20 bg-[#65F4A3]/08 p-4">
+        <View className="mb-5 flex-row items-start gap-3 rounded-2xl border border-[#16A34A]/20 bg-[#F0FDF4] p-4">
           <View className="mt-0.5">
-            <Film size={16} color="#65F4A3" />
+            <Film size={16} color="#16A34A" />
           </View>
           <View className="flex-1">
-            <Text className="text-[11px] font-black uppercase text-[#65F4A3] mb-1">Fort Knox Privacy</Text>
-            <Text className="text-xs leading-4 text-[#94A3B8]">
+            <Text className="text-[10px] font-black uppercase text-[#16A34A] mb-1">Fort Knox Privacy</Text>
+            <Text className="text-xs leading-4 text-[#555555]">
               All clips stay private by default. Sharing requires your approval and generates a watermarked, expiring link.
             </Text>
           </View>
@@ -193,26 +181,27 @@ export default function EpicMoment() {
         {/* Empty State */}
         {reels.length === 0 && !uploading && (
           <View className="items-center py-16">
-            <View className="h-24 w-24 items-center justify-center rounded-full border border-[#F6C453]/20 bg-[#F6C453]/10 mb-5">
-              <Play size={44} color="#F6C453" />
+            <View className="h-24 w-24 items-center justify-center rounded-full bg-[#FDF6E3] mb-5">
+              <Play size={44} color="#D4A843" />
             </View>
-            <Text className="text-xl font-black text-[#F8FAFC] mb-2">No Reels Yet</Text>
-            <Text className="text-sm text-center text-[#94A3B8] leading-5 max-w-[260px]">
+            <Text className="text-xl font-black text-[#1A1A1A] mb-2">No Reels Yet</Text>
+            <Text className="text-sm text-center text-[#888888] leading-5 max-w-[260px]">
               Upload your first Epic Moment — a stick landing, first kip, or beam salute.
             </Text>
           </View>
         )}
 
-        {uploading && (
-          <UploadingCard />
-        )}
+        {uploading && <UploadingCard />}
 
         {/* Reel List */}
         {reels.length > 0 && (
           <View className="mb-6">
-            <Text className="text-[11px] font-black uppercase tracking-widest text-[#8FE7FF] mb-3">
-              {reels.length} Clip{reels.length !== 1 ? "s" : ""} in Vault
-            </Text>
+            <View className="flex-row items-center gap-3 mb-3">
+              <Text className="text-[10px] font-black uppercase tracking-widest text-[#D4A843]">
+                {reels.length} Clip{reels.length !== 1 ? "s" : ""} in Vault
+              </Text>
+              <View className="flex-1 h-px bg-[#E8E8E8]" />
+            </View>
             <View className="gap-4">
               {reels.map((reel: any) => (
                 <ReelCard
@@ -222,7 +211,6 @@ export default function EpicMoment() {
                   onPlay={() => setActiveReel(activeReel === reel._id ? null : reel._id)}
                   onShare={handleShare}
                   onDelete={() => handleDelete(reel._id)}
-                  onRename={() => handleRenameReel(reel._id, reel.title)}
                 />
               ))}
             </View>
@@ -236,17 +224,13 @@ export default function EpicMoment() {
 }
 
 function UploadButton({
-  label,
-  sublabel,
-  icon,
-  color,
-  loading,
-  onPress,
+  label, sublabel, icon, color, bg, loading, onPress,
 }: {
   label: string;
   sublabel: string;
   icon: React.ReactNode;
   color: string;
+  bg: string;
   loading: boolean;
   onPress: () => void;
 }) {
@@ -258,28 +242,16 @@ function UploadButton({
     Animated.spring(scale, { toValue: 1, useNativeDriver: true, speed: 20, bounciness: 8 }).start();
 
   return (
-    <Pressable
-      onPress={onPress}
-      onPressIn={pressIn}
-      onPressOut={pressOut}
-      disabled={loading}
-      className="flex-1"
-    >
+    <Pressable onPress={onPress} onPressIn={pressIn} onPressOut={pressOut} disabled={loading} className="flex-1">
       <Animated.View
-        style={{ transform: [{ scale }] }}
-        className="items-center rounded-2xl py-5 px-3"
         style={[
           { transform: [{ scale }] },
-          {
-            backgroundColor: `${color}15`,
-            borderWidth: 1,
-            borderColor: `${color}40`,
-          },
+          { backgroundColor: bg, borderWidth: 1, borderColor: `${color}40`, borderRadius: 16, alignItems: "center", paddingVertical: 20, paddingHorizontal: 12 },
         ]}
       >
         {loading ? <Spinner /> : icon}
         <Text className="font-black text-sm mt-2" style={{ color }}>{label}</Text>
-        <Text className="text-[10px] font-bold uppercase text-[#94A3B8] mt-0.5">{sublabel}</Text>
+        <Text className="text-[10px] font-bold uppercase text-[#888888] mt-0.5">{sublabel}</Text>
       </Animated.View>
     </Pressable>
   );
@@ -300,51 +272,41 @@ function UploadingCard() {
   const width = progress.interpolate({ inputRange: [0, 1], outputRange: ["0%", "100%"] });
 
   return (
-    <View className="mb-4 overflow-hidden rounded-2xl border border-[#F6C453]/20 bg-[#0A1B33] p-4">
+    <View className="mb-4 overflow-hidden rounded-2xl border border-[#E8E8E8] bg-white p-4" style={SHADOW}>
       <View className="flex-row items-center gap-3 mb-3">
-        <View className="h-10 w-10 items-center justify-center rounded-xl bg-[#F6C453]/15">
-          <Upload size={18} color="#F6C453" />
+        <View className="h-10 w-10 items-center justify-center rounded-xl bg-[#FDF6E3]">
+          <Upload size={18} color="#D4A843" />
         </View>
         <View className="flex-1">
-          <Text className="font-black text-[#F8FAFC]">Uploading to Vault...</Text>
-          <Text className="text-xs text-[#94A3B8]">Encrypting and saving your clip</Text>
+          <Text className="font-black text-[#1A1A1A]">Uploading to Vault...</Text>
+          <Text className="text-xs text-[#888888]">Encrypting and saving your clip</Text>
         </View>
       </View>
-      <View className="h-2 overflow-hidden rounded-full bg-[#061528]">
-        <Animated.View
-          style={{ width, height: "100%", backgroundColor: "#F6C453", borderRadius: 99 }}
-        />
+      <View className="h-2 overflow-hidden rounded-full bg-[#F0F0EE]">
+        <Animated.View style={{ width, height: "100%", backgroundColor: "#D4A843", borderRadius: 99 }} />
       </View>
     </View>
   );
 }
 
 function ReelCard({
-  reel,
-  isActive,
-  onPlay,
-  onShare,
-  onDelete,
-  onRename,
+  reel, isActive, onPlay, onShare, onDelete,
 }: {
   reel: any;
   isActive: boolean;
   onPlay: () => void;
   onShare: () => void;
   onDelete: () => void;
-  onRename: () => void;
 }) {
   const [editingTitle, setEditingTitle] = useState(false);
   const [title, setTitle] = useState(reel.title);
 
   const createdDate = new Date(reel.createdAt).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
+    month: "short", day: "numeric", year: "numeric",
   });
 
   return (
-    <View className="overflow-hidden rounded-[22px] border border-[#F6C453]/20 bg-[#0A1B33]">
+    <View className="overflow-hidden rounded-2xl bg-white" style={SHADOW}>
       {/* Video Player */}
       <Pressable onPress={onPlay} className="relative">
         {isActive ? (
@@ -358,13 +320,13 @@ function ReelCard({
           />
         ) : (
           <View
-            className="w-full items-center justify-center bg-[#061528]"
+            className="w-full items-center justify-center bg-[#1A1A2E]"
             style={{ aspectRatio: 16 / 9 }}
           >
-            <View className="h-16 w-16 items-center justify-center rounded-full bg-[#F6C453]/20">
-              <Play size={32} color="#F6C453" />
+            <View className="h-16 w-16 items-center justify-center rounded-full bg-[#D4A843]/20">
+              <Play size={32} color="#D4A843" />
             </View>
-            <Text className="mt-3 text-[10px] font-black uppercase tracking-widest text-[#94A3B8]">
+            <Text className="mt-3 text-[10px] font-black uppercase tracking-widest text-[#9999BB]">
               Tap to play
             </Text>
             {reel.duration && (
@@ -380,40 +342,37 @@ function ReelCard({
       <View className="p-4">
         <View className="flex-row items-center justify-between mb-1">
           {editingTitle ? (
-            <View className="flex-1 mr-2 overflow-hidden rounded-xl border border-[#F6C453]/30 bg-[#061528]">
+            <View className="flex-1 mr-2 overflow-hidden rounded-xl border border-[#E8E8E8] bg-[#F8F8F6]">
               <Input
                 value={title}
                 onChangeText={setTitle}
                 onSubmitEditing={() => setEditingTitle(false)}
                 onBlur={() => setEditingTitle(false)}
                 autoFocus
-                className="border-0 bg-transparent px-3 py-2 text-[#F8FAFC] font-black"
+                className="border-0 bg-transparent px-3 py-2 text-[#1A1A1A] font-black"
               />
             </View>
           ) : (
             <Pressable onPress={() => setEditingTitle(true)} className="flex-1">
-              <Text className="font-black text-[#F8FAFC] text-base">{title}</Text>
+              <Text className="font-black text-[#1A1A1A] text-base">{title}</Text>
             </Pressable>
           )}
         </View>
-        <Text className="text-[11px] text-[#94A3B8] mb-3">{createdDate}</Text>
+        <Text className="text-[11px] text-[#888888] mb-3">{createdDate}</Text>
 
-        {/* Action Row */}
         <View className="flex-row gap-2">
           <Pressable
             onPress={onShare}
-            className="flex-1 flex-row items-center justify-center gap-2 rounded-xl py-2.5"
-            style={{ backgroundColor: "#F6C45320", borderWidth: 1, borderColor: "#F6C45340" }}
+            className="flex-1 flex-row items-center justify-center gap-2 rounded-xl py-2.5 bg-[#FDF6E3] border border-[#D4A843]/30"
           >
-            <Share size={14} color="#F6C453" />
-            <Text className="text-xs font-black text-[#F6C453]">Share</Text>
+            <Share size={14} color="#D4A843" />
+            <Text className="text-xs font-black text-[#D4A843]">Share</Text>
           </Pressable>
           <Pressable
             onPress={onDelete}
-            className="h-10 w-10 items-center justify-center rounded-xl"
-            style={{ backgroundColor: "#F472B620", borderWidth: 1, borderColor: "#F472B640" }}
+            className="h-10 w-10 items-center justify-center rounded-xl bg-[#FFF0F0] border border-[#E54B4B]/30"
           >
-            <Trash2 size={14} color="#F472B6" />
+            <Trash2 size={14} color="#E54B4B" />
           </Pressable>
         </View>
       </View>

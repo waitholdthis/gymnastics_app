@@ -8,10 +8,12 @@ import { Apple, ChevronLeft, ChevronRight, Clock, Dumbbell, Wind, Zap } from "lu
 const CATEGORIES = ["All", "Conditioning", "Stretching", "Nutrition"] as const;
 type Category = typeof CATEGORIES[number];
 
-const CATEGORY_THEME: Record<string, { color: string; icon: React.ReactNode; bg: string }> = {
-  Conditioning: { color: "#8FE7FF", icon: <Dumbbell size={14} color="#8FE7FF" />, bg: "#8FE7FF20" },
-  Stretching:   { color: "#65F4A3", icon: <Wind size={14} color="#65F4A3" />,   bg: "#65F4A320" },
-  Nutrition:    { color: "#FB923C", icon: <Apple size={14} color="#FB923C" />,  bg: "#FB923C20" },
+const SHADOW = { shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 8, elevation: 3 };
+
+const CATEGORY_THEME: Record<string, { color: string; bg: string; icon: React.ReactNode }> = {
+  Conditioning: { color: "#1D5BB5", bg: "#EFF6FF", icon: <Dumbbell size={14} color="#1D5BB5" /> },
+  Stretching:   { color: "#16A34A", bg: "#F0FDF4", icon: <Wind size={14} color="#16A34A" /> },
+  Nutrition:    { color: "#C2500A", bg: "#FFF0E8", icon: <Apple size={14} color="#C2500A" /> },
 };
 
 export default function RecoveryLab() {
@@ -23,29 +25,32 @@ export default function RecoveryLab() {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-[#061528]" edges={["top"]}>
-      <View className="px-4 pt-6 pb-4 flex-row items-center gap-3">
+    <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
+      {/* Header */}
+      <View className="px-4 pt-4 pb-3 flex-row items-center gap-3 border-b border-[#E8E8E8]">
         <Pressable
           onPress={() => router.back()}
-          className="h-11 w-11 items-center justify-center rounded-full bg-[#0B1F3D]"
+          className="h-11 w-11 items-center justify-center rounded-full bg-[#F0F0EE]"
         >
-          <ChevronLeft size={22} color="#F8FAFC" />
+          <ChevronLeft size={22} color="#444444" />
         </Pressable>
         <View className="flex-1">
-          <Text className="text-[11px] font-black uppercase tracking-widest text-[#65F4A3]">Athlete Wellness</Text>
-          <Text className="text-2xl font-black text-[#F8FAFC]">Recovery Lab</Text>
+          <Text className="text-[10px] font-black uppercase tracking-widest text-[#D4A843]">Athlete Wellness</Text>
+          <Text className="text-2xl font-black text-[#1A1A1A]">Recovery Lab</Text>
         </View>
-        <View className="h-11 w-11 items-center justify-center rounded-full border border-[#65F4A3]/30 bg-[#65F4A3]/10">
-          <Zap size={20} color="#65F4A3" />
+        <View className="h-11 w-11 items-center justify-center rounded-full bg-[#F0FDF4]">
+          <Zap size={20} color="#16A34A" />
         </View>
       </View>
 
-      <View className="px-4 mb-5">
+      {/* Category filter */}
+      <View className="px-4 pt-3 mb-2">
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
           {CATEGORIES.map((cat) => {
             const isSelected = selectedCategory === cat;
             const theme = cat !== "All" ? CATEGORY_THEME[cat] : null;
-            const activeColor = theme?.color ?? "#F6C453";
+            const activeColor = theme?.color ?? "#D4A843";
+            const activeBg = theme?.bg ?? "#FDF6E3";
 
             return (
               <Pressable
@@ -53,15 +58,12 @@ export default function RecoveryLab() {
                 onPress={() => setSelectedCategory(cat)}
                 className="rounded-full px-4 py-2"
                 style={{
-                  backgroundColor: isSelected ? `${activeColor}25` : "#0A1B33",
+                  backgroundColor: isSelected ? activeBg : "#F8F8F6",
                   borderWidth: 1,
-                  borderColor: isSelected ? activeColor : "rgba(255,255,255,0.1)",
+                  borderColor: isSelected ? activeColor : "#E8E8E8",
                 }}
               >
-                <Text
-                  className="font-black text-sm"
-                  style={{ color: isSelected ? activeColor : "#94A3B8" }}
-                >
+                <Text className="font-black text-sm" style={{ color: isSelected ? activeColor : "#888888" }}>
                   {cat}
                 </Text>
               </Pressable>
@@ -75,10 +77,10 @@ export default function RecoveryLab() {
           <View className="py-20 items-center"><Spinner /></View>
         ) : resources.length === 0 ? (
           <View className="items-center py-24">
-            <Text className="text-[#94A3B8] text-center">No recovery protocols found for this category.</Text>
+            <Text className="text-[#888888] text-center">No recovery protocols found for this category.</Text>
           </View>
         ) : (
-          <View className="gap-4 pb-28">
+          <View className="gap-4 pb-28 pt-3">
             {resources.map((item: any) => (
               <RecoveryCard key={item._id} item={item} />
             ))}
@@ -90,21 +92,19 @@ export default function RecoveryLab() {
 }
 
 function RecoveryCard({ item }: { item: any }) {
-  const theme = CATEGORY_THEME[item.category] ?? { color: "#8FE7FF", icon: null, bg: "#8FE7FF20" };
+  const theme = CATEGORY_THEME[item.category] ?? { color: "#1D5BB5", bg: "#EFF6FF", icon: null };
   const [expanded, setExpanded] = useState(false);
 
   return (
     <View
-      className="overflow-hidden rounded-[22px] bg-[#0A1B33]"
-      style={{ borderWidth: 1, borderColor: `${theme.color}30` }}
+      className="overflow-hidden rounded-2xl bg-white"
+      style={[SHADOW, { borderLeftWidth: 3, borderLeftColor: theme.color }]}
     >
-      <View className="absolute right-[-28px] top-[-28px] h-24 w-24 rounded-full" style={{ backgroundColor: `${theme.color}12` }} />
-
       <View className="p-4">
         <View className="flex-row items-start justify-between gap-3 mb-3">
           <View className="flex-1">
             <View className="flex-row items-center gap-2 mb-1">
-              <View className="flex-row items-center gap-1.5 rounded-full px-2 py-1" style={{ backgroundColor: theme.bg }}>
+              <View className="flex-row items-center gap-1.5 rounded-full px-2.5 py-1" style={{ backgroundColor: theme.bg }}>
                 {theme.icon}
                 <Text className="text-[10px] font-black uppercase" style={{ color: theme.color }}>{item.category}</Text>
               </View>
@@ -116,23 +116,23 @@ function RecoveryCard({ item }: { item: any }) {
                 </View>
               )}
             </View>
-            <Text className="text-lg font-black text-[#F8FAFC]">{item.title}</Text>
-            <Text className="text-xs text-[#94A3B8] mt-1 leading-4">{item.description}</Text>
+            <Text className="text-lg font-black text-[#1A1A1A]">{item.title}</Text>
+            <Text className="text-xs text-[#888888] mt-1 leading-4">{item.description}</Text>
           </View>
           {item.duration && (
-            <View className="items-center rounded-2xl border border-white/10 bg-[#061528] px-3 py-2">
-              <Clock size={14} color="#8FE7FF" />
-              <Text className="text-sm font-black text-[#F8FAFC] mt-1">{item.duration}</Text>
+            <View className="items-center rounded-xl border border-[#E8E8E8] bg-[#F8F8F6] px-3 py-2">
+              <Clock size={14} color="#888888" />
+              <Text className="text-sm font-black text-[#1A1A1A] mt-1">{item.duration}</Text>
             </View>
           )}
         </View>
 
         {expanded && (
-          <View className="mb-3 rounded-2xl border border-white/10 bg-[#061528] p-4">
-            <Text className="text-[11px] font-black uppercase tracking-widest mb-2" style={{ color: theme.color }}>
+          <View className="mb-3 rounded-xl border border-[#E8E8E8] bg-[#F8F8F6] p-4">
+            <Text className="text-[10px] font-black uppercase tracking-widest mb-2" style={{ color: theme.color }}>
               Protocol Steps
             </Text>
-            <Text className="text-sm leading-6 text-[#C7D2FE]">{item.content}</Text>
+            <Text className="text-sm leading-6 text-[#555555]">{item.content}</Text>
           </View>
         )}
 
@@ -143,14 +143,18 @@ function RecoveryCard({ item }: { item: any }) {
           <Text className="text-xs font-black" style={{ color: theme.color }}>
             {expanded ? "Collapse" : "View Full Protocol"}
           </Text>
-          <ChevronRight size={14} color={theme.color} style={{ transform: [{ rotate: expanded ? "90deg" : "0deg" }] }} />
+          <ChevronRight
+            size={14}
+            color={theme.color}
+            style={{ transform: [{ rotate: expanded ? "90deg" : "0deg" }] }}
+          />
         </Pressable>
       </View>
 
       {expanded && (
         <Pressable
-          className="mx-4 mb-4 items-center rounded-2xl py-3"
-          style={{ backgroundColor: `${theme.color}25`, borderWidth: 1, borderColor: `${theme.color}50` }}
+          className="mx-4 mb-4 items-center rounded-xl py-3"
+          style={{ backgroundColor: theme.bg, borderWidth: 1, borderColor: `${theme.color}40` }}
         >
           <Text className="font-black text-sm" style={{ color: theme.color }}>Start This Protocol</Text>
         </Pressable>
@@ -160,13 +164,13 @@ function RecoveryCard({ item }: { item: any }) {
 }
 
 function getIntensityColor(intensity: string) {
-  if (intensity === "Low") return "#65F4A3";
-  if (intensity === "Medium") return "#F6C453";
-  return "#F472B6";
+  if (intensity === "Low") return "#16A34A";
+  if (intensity === "Medium") return "#D4A843";
+  return "#E54B4B";
 }
 
 function getIntensityBg(intensity: string) {
-  if (intensity === "Low") return "#65F4A320";
-  if (intensity === "Medium") return "#F6C45320";
-  return "#F472B620";
+  if (intensity === "Low") return "#F0FDF4";
+  if (intensity === "Medium") return "#FDF6E3";
+  return "#FFF0F0";
 }
