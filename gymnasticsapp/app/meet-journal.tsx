@@ -28,27 +28,41 @@ export default function MeetJournal() {
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.bg }} edges={["top"]}>
       {/* Header */}
-      <View className="px-4 pt-4 pb-3 flex-row items-center justify-between border-b" style={{ borderColor: colors.border }}>
-        <View className="flex-row items-center gap-3">
+      <View
+        style={{
+          paddingHorizontal: 16, paddingTop: 16, paddingBottom: 12,
+          flexDirection: "row", alignItems: "center", justifyContent: "space-between",
+          borderBottomWidth: 1, borderBottomColor: colors.border,
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
           <Pressable
             onPress={() => router.back()}
-            className="h-11 w-11 items-center justify-center rounded-full"
-            style={{ backgroundColor: colors.backBtnBg }}
+            style={{
+              height: 44, width: 44, alignItems: "center", justifyContent: "center",
+              borderRadius: 22, backgroundColor: colors.backBtnBg,
+            }}
           >
             <ChevronLeft size={22} color={colors.backBtnIcon} />
           </Pressable>
           <View>
-            <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.gold }}>Competition Record</Text>
-            <Text className="text-2xl font-black" style={{ color: colors.text }}>Meet Journal</Text>
+            <Text style={{ fontSize: 9, fontWeight: "900", textTransform: "uppercase", letterSpacing: 2, color: colors.gold }}>
+              Competition Record
+            </Text>
+            <Text style={{ fontSize: 24, fontWeight: "900", color: colors.text, letterSpacing: -0.5 }}>
+              Meet Journal
+            </Text>
           </View>
         </View>
         {!isAdding && (
           <Pressable
             onPress={() => setIsAdding(true)}
-            className="h-11 w-11 items-center justify-center rounded-full"
-            style={{ backgroundColor: colors.gold }}
+            style={{
+              height: 44, width: 44, alignItems: "center", justifyContent: "center",
+              borderRadius: 22, backgroundColor: colors.gold,
+            }}
           >
-            <Plus size={20} color="#1A1A1A" />
+            <Plus size={20} color="#0A0A0E" />
           </Pressable>
         )}
       </View>
@@ -94,7 +108,7 @@ function MeetCard({ meet }: { meet: any }) {
       <View className="px-5 py-4 flex-row items-start justify-between" style={{ backgroundColor: colors.hero }}>
         <View className="flex-1">
           <View className="flex-row items-center gap-2 mb-1">
-            <View className="rounded-full px-2.5 py-1 bg-[#D4A843]/20">
+            <View className="rounded-full px-2.5 py-1" style={{ backgroundColor: colors.goldBg }}>
               <Text className="text-[10px] font-black uppercase" style={{ color: colors.gold }}>Competition</Text>
             </View>
           </View>

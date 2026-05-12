@@ -53,21 +53,36 @@ export default function CoachConnection() {
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.bg }} edges={["top"]}>
       {/* Header */}
       <View
-        className="px-4 pt-4 pb-3 flex-row items-center gap-3 border-b"
-        style={{ borderBottomColor: colors.border }}
+        style={{
+          paddingHorizontal: 16, paddingTop: 16, paddingBottom: 12,
+          flexDirection: "row", alignItems: "center", gap: 12,
+          borderBottomWidth: 1, borderBottomColor: colors.border,
+        }}
       >
         <Pressable
           onPress={() => router.back()}
-          className="h-11 w-11 items-center justify-center rounded-full"
-          style={{ backgroundColor: colors.backBtnBg }}
+          style={{
+            height: 44, width: 44, alignItems: "center", justifyContent: "center",
+            borderRadius: 22, backgroundColor: colors.backBtnBg,
+          }}
         >
           <ChevronLeft size={22} color={colors.backBtnIcon} />
         </Pressable>
-        <View className="flex-1">
-          <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.gold }}>Gym & Home</Text>
-          <Text className="text-2xl font-black" style={{ color: colors.text }}>Coach Connection</Text>
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontSize: 9, fontWeight: "900", textTransform: "uppercase", letterSpacing: 2, color: colors.gold }}>
+            Gym & Home
+          </Text>
+          <Text style={{ fontSize: 24, fontWeight: "900", color: colors.text, letterSpacing: -0.5 }}>
+            Coach Connection
+          </Text>
         </View>
-        <View className="h-11 w-11 items-center justify-center rounded-full" style={{ backgroundColor: colors.pinkBg }}>
+        <View
+          style={{
+            height: 44, width: 44, alignItems: "center", justifyContent: "center",
+            borderRadius: 22, backgroundColor: colors.pinkBg,
+            borderWidth: 1, borderColor: colors.pink + "30",
+          }}
+        >
           <Users size={20} color={colors.pink} />
         </View>
       </View>

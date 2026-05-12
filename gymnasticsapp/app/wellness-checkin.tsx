@@ -41,19 +41,37 @@ export default function WellnessCheckin() {
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.bg }} edges={["top"]}>
       {/* Header */}
-      <View className="px-4 pt-4 pb-3 flex-row items-center gap-3 border-b" style={{ borderColor: colors.border }}>
+      <View
+        style={{
+          paddingHorizontal: 16, paddingTop: 16, paddingBottom: 12,
+          flexDirection: "row", alignItems: "center", gap: 12,
+          borderBottomWidth: 1, borderBottomColor: colors.border,
+        }}
+      >
         <Pressable
           onPress={() => router.back()}
-          className="h-11 w-11 items-center justify-center rounded-full"
-          style={{ backgroundColor: colors.backBtnBg }}
+          style={{
+            height: 44, width: 44, alignItems: "center", justifyContent: "center",
+            borderRadius: 22, backgroundColor: colors.backBtnBg,
+          }}
         >
           <ChevronLeft size={22} color={colors.backBtnIcon} />
         </Pressable>
-        <View className="flex-1">
-          <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.gold }}>Recovery Lab</Text>
-          <Text className="text-2xl font-black" style={{ color: colors.text }}>Daily Scout Snapshot</Text>
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontSize: 9, fontWeight: "900", textTransform: "uppercase", letterSpacing: 2, color: colors.gold }}>
+            Recovery Lab
+          </Text>
+          <Text style={{ fontSize: 24, fontWeight: "900", color: colors.text, letterSpacing: -0.5 }}>
+            Scout Snapshot
+          </Text>
         </View>
-        <View className="h-11 w-11 items-center justify-center rounded-full" style={{ backgroundColor: colors.greenBg }}>
+        <View
+          style={{
+            height: 44, width: 44, alignItems: "center", justifyContent: "center",
+            borderRadius: 22, backgroundColor: colors.greenBg,
+            borderWidth: 1, borderColor: colors.green + "30",
+          }}
+        >
           <Heart size={20} color={colors.green} />
         </View>
       </View>
@@ -65,20 +83,32 @@ export default function WellnessCheckin() {
           contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 80 }}
         >
           {/* Scout reading card */}
-          <View className="mb-5 overflow-hidden rounded-2xl p-5" style={{ backgroundColor: colors.hero }}>
-            <View className="absolute top-0 right-0 h-28 w-28 rounded-full bg-[#D4A843]/10" />
-            <View className="flex-row items-center gap-4">
-              <View className="h-16 w-16 items-center justify-center rounded-2xl bg-white/10">
-                <Text style={{ fontSize: 28 }}>
-                  {overallScore >= 4 ? "🌟" : overallScore >= 3 ? "👍" : "⚠️"}
-                </Text>
+          <View style={{ marginBottom: 20, borderRadius: 20, overflow: "hidden", padding: 20, backgroundColor: colors.hero }}>
+            <View style={{ position: "absolute", top: -20, right: -20, width: 120, height: 120, borderRadius: 60, backgroundColor: colors.goldGlow }} />
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
+              <View
+                style={{
+                  width: 64, height: 64, alignItems: "center", justifyContent: "center",
+                  borderRadius: 18, backgroundColor: "rgba(255,255,255,0.07)",
+                  borderWidth: 1, borderColor: "rgba(255,255,255,0.1)",
+                }}
+              >
+                {overallScore >= 4
+                  ? <Zap size={28} color={colors.gold} />
+                  : overallScore >= 3
+                    ? <Activity size={28} color={colors.blue} />
+                    : <Thermometer size={28} color={colors.red} />}
               </View>
-              <View className="flex-1">
-                <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.gold }}>Scout Reading</Text>
-                <Text className="text-lg font-black" style={{ color: colors.heroText }}>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 9, fontWeight: "900", textTransform: "uppercase", letterSpacing: 2, color: colors.gold, marginBottom: 4 }}>
+                  Scout Reading
+                </Text>
+                <Text style={{ fontSize: 18, fontWeight: "900", color: colors.heroText, letterSpacing: -0.3 }}>
                   {overallScore >= 4 ? "Ready to Train Hard" : overallScore >= 3 ? "Moderate Readiness" : "Recovery Day Recommended"}
                 </Text>
-                <Text className="text-xs mt-0.5" style={{ color: colors.heroSubtext }}>Log how {gymnast.name} feels right now</Text>
+                <Text style={{ fontSize: 11, marginTop: 4, color: colors.heroSubtext }}>
+                  Log how {gymnast.name} feels right now
+                </Text>
               </View>
             </View>
           </View>

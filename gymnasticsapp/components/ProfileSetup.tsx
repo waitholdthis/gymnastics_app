@@ -48,7 +48,7 @@ export default function ProfileSetup() {
             <UserCircle size={80} className="text-primary mb-4" />
             <Text variant="h1" className="text-3xl text-center font-bold">Create your username</Text>
             <Text className="text-muted-foreground text-center mt-2">
-              This is the name you will use inside AeroVault after signing in with your email and password.
+              This is the name you will use inside The Ascent after signing in with your email and password.
             </Text>
           </View>
 

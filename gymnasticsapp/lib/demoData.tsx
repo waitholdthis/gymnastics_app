@@ -403,7 +403,7 @@ export function useAuthActions() {
       });
 
       if (!user || user.password !== password) {
-        throw new Error("That username/email and password do not match an AeroVault account.");
+        throw new Error("That username/email and password do not match an Ascent account.");
       }
 
       setState((current) => ({ ...current, currentUserId: user._id }));

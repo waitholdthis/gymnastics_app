@@ -9,7 +9,7 @@ import { useAppTheme } from "@/lib/appTheme";
 const CATEGORY_THEME: Record<string, { color: string }> = {
   "After Practice": { color: "#1D5BB5" },
   "Fear & Anxiety":  { color: "#BE185D" },
-  "Competition":     { color: "#D4A843" },
+  "Competition":     { color: "#D4AF37" },
 };
 
 function getCategoryBg(category: string, colors: ReturnType<typeof useAppTheme>["colors"]): string {
@@ -31,21 +31,36 @@ export default function ParentAcademy() {
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.bg }} edges={["top"]}>
       {/* Header */}
       <View
-        className="px-4 pt-4 pb-3 flex-row items-center gap-3 border-b"
-        style={{ borderBottomColor: colors.border }}
+        style={{
+          paddingHorizontal: 16, paddingTop: 16, paddingBottom: 12,
+          flexDirection: "row", alignItems: "center", gap: 12,
+          borderBottomWidth: 1, borderBottomColor: colors.border,
+        }}
       >
         <Pressable
           onPress={() => router.back()}
-          className="h-11 w-11 items-center justify-center rounded-full"
-          style={{ backgroundColor: colors.backBtnBg }}
+          style={{
+            height: 44, width: 44, alignItems: "center", justifyContent: "center",
+            borderRadius: 22, backgroundColor: colors.backBtnBg,
+          }}
         >
           <ChevronLeft size={22} color={colors.backBtnIcon} />
         </Pressable>
-        <View className="flex-1">
-          <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.gold }}>Mindset Playbook</Text>
-          <Text className="text-2xl font-black" style={{ color: colors.text }}>Parent Academy</Text>
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontSize: 9, fontWeight: "900", textTransform: "uppercase", letterSpacing: 2, color: colors.gold }}>
+            Mindset Playbook
+          </Text>
+          <Text style={{ fontSize: 24, fontWeight: "900", color: colors.text, letterSpacing: -0.5 }}>
+            Parent Academy
+          </Text>
         </View>
-        <View className="h-11 w-11 items-center justify-center rounded-full" style={{ backgroundColor: colors.goldBg }}>
+        <View
+          style={{
+            height: 44, width: 44, alignItems: "center", justifyContent: "center",
+            borderRadius: 22, backgroundColor: colors.goldBg,
+            borderWidth: 1, borderColor: colors.gold + "30",
+          }}
+        >
           <GraduationCap size={20} color={colors.gold} />
         </View>
       </View>
@@ -53,11 +68,11 @@ export default function ParentAcademy() {
       <ScrollView className="flex-1 px-4" keyboardShouldPersistTaps="handled">
         {/* Hero Banner */}
         <View className="mt-4 mb-5 overflow-hidden rounded-2xl p-5" style={{ backgroundColor: colors.hero }}>
-          <View className="absolute top-0 right-0 h-36 w-36 rounded-full bg-[#D4A843]/10" />
-          <View className="absolute bottom-0 left-0 h-24 w-24 rounded-full bg-white/5" />
+          <View style={{ position: "absolute", top: -20, right: -20, width: 140, height: 140, borderRadius: 70, backgroundColor: colors.goldGlow }} />
+          <View style={{ position: "absolute", bottom: -12, left: -12, width: 80, height: 80, borderRadius: 40, backgroundColor: "rgba(255,255,255,0.03)" }} />
           <View className="flex-row items-start gap-4">
-            <View className="h-14 w-14 items-center justify-center rounded-xl bg-[#D4A843]/20">
-              <GraduationCap size={30} color={colors.gold} />
+            <View style={{ width: 56, height: 56, alignItems: "center", justifyContent: "center", borderRadius: 16, backgroundColor: colors.goldBg, borderWidth: 1, borderColor: colors.gold + "30" }}>
+              <GraduationCap size={28} color={colors.gold} />
             </View>
             <View className="flex-1">
               <Text className="text-[10px] font-black uppercase tracking-widest mb-1" style={{ color: colors.gold }}>

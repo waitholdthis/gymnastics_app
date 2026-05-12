@@ -127,21 +127,36 @@ export default function EpicMoment() {
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.bg }} edges={["top"]}>
       {/* Header */}
       <View
-        className="px-4 pt-4 pb-3 flex-row items-center gap-3 border-b"
-        style={{ borderBottomColor: colors.border }}
+        style={{
+          paddingHorizontal: 16, paddingTop: 16, paddingBottom: 12,
+          flexDirection: "row", alignItems: "center", gap: 12,
+          borderBottomWidth: 1, borderBottomColor: colors.border,
+        }}
       >
         <Pressable
           onPress={() => router.back()}
-          className="h-11 w-11 items-center justify-center rounded-full"
-          style={{ backgroundColor: colors.backBtnBg }}
+          style={{
+            height: 44, width: 44, alignItems: "center", justifyContent: "center",
+            borderRadius: 22, backgroundColor: colors.backBtnBg,
+          }}
         >
           <ChevronLeft size={22} color={colors.backBtnIcon} />
         </Pressable>
-        <View className="flex-1">
-          <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.gold }}>Cinematic Vault</Text>
-          <Text className="text-2xl font-black" style={{ color: colors.text }}>Epic Moment Reels</Text>
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontSize: 9, fontWeight: "900", textTransform: "uppercase", letterSpacing: 2, color: colors.gold }}>
+            Cinematic Vault
+          </Text>
+          <Text style={{ fontSize: 24, fontWeight: "900", color: colors.text, letterSpacing: -0.5 }}>
+            Epic Moment Reels
+          </Text>
         </View>
-        <View className="h-11 w-11 items-center justify-center rounded-full" style={{ backgroundColor: colors.goldBg }}>
+        <View
+          style={{
+            height: 44, width: 44, alignItems: "center", justifyContent: "center",
+            borderRadius: 22, backgroundColor: colors.goldBg,
+            borderWidth: 1, borderColor: colors.gold + "30",
+          }}
+        >
           <Film size={20} color={colors.gold} />
         </View>
       </View>
@@ -336,7 +351,7 @@ function ReelCard({
             className="w-full items-center justify-center"
             style={{ aspectRatio: 16 / 9, backgroundColor: colors.hero }}
           >
-            <View className="h-16 w-16 items-center justify-center rounded-full bg-[#D4A843]/20">
+            <View style={{ height: 64, width: 64, alignItems: "center", justifyContent: "center", borderRadius: 32, backgroundColor: colors.goldBg }}>
               <Play size={32} color={colors.gold} />
             </View>
             <Text className="mt-3 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.heroSubtext }}>

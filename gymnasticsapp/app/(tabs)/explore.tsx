@@ -142,18 +142,28 @@ export default function ExploreScreen() {
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.bg }} edges={["top"]}>
       {/* Nav */}
       <View
-        className="flex-row items-center gap-3 px-4 pt-4 pb-3 border-b"
-        style={{ borderColor: colors.border }}
+        style={{
+          flexDirection: "row", alignItems: "center", gap: 12,
+          paddingHorizontal: 16, paddingTop: 16, paddingBottom: 12,
+          borderBottomWidth: 1, borderBottomColor: colors.border,
+        }}
       >
         <View
-          className="h-10 w-10 items-center justify-center rounded-full"
-          style={{ backgroundColor: colors.goldBg }}
+          style={{
+            width: 44, height: 44, alignItems: "center", justifyContent: "center",
+            borderRadius: 22, backgroundColor: colors.goldBg,
+            borderWidth: 1, borderColor: colors.gold + "30",
+          }}
         >
           <Compass size={20} color={colors.gold} />
         </View>
         <View>
-          <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.gold }}>Knowledge Hub</Text>
-          <Text className="text-xl font-black" style={{ color: colors.text }}>Atlas</Text>
+          <Text style={{ fontSize: 9, fontWeight: "900", textTransform: "uppercase", letterSpacing: 2, color: colors.gold }}>
+            Knowledge Hub
+          </Text>
+          <Text style={{ fontSize: 22, fontWeight: "900", color: colors.text, letterSpacing: -0.5 }}>
+            Atlas
+          </Text>
         </View>
       </View>
 
@@ -332,7 +342,7 @@ function IntroductionSection({ onNavigate }: { onNavigate: (t: string) => void }
     <View className="gap-5 pb-28">
       {/* Gym Dictionary — dark hero */}
       <View className="overflow-hidden rounded-2xl p-5" style={{ backgroundColor: colors.hero }}>
-        <View className="absolute top-0 right-0 h-32 w-32 rounded-full bg-[#D4A843]/10" />
+        <View style={{ position: "absolute", top: -16, right: -16, width: 120, height: 120, borderRadius: 60, backgroundColor: colors.goldGlow }} />
         <View className="flex-row items-center gap-3 mb-2">
           <BookOpen size={22} color={colors.gold} />
           <Text className="font-black text-lg" style={{ color: colors.heroText }}>The Gym Dictionary</Text>

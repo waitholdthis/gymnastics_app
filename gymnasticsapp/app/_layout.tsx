@@ -78,10 +78,10 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <AppThemeProvider>
         <UIThemeProvider>
-          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <ThemeProvider value={DarkTheme}>
             <DemoDataProvider>
               <AppContent />
-              <StatusBar style="auto" />
+              <StatusBar style="light" />
             </DemoDataProvider>
           </ThemeProvider>
         </UIThemeProvider>

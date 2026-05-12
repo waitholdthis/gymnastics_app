@@ -46,26 +46,38 @@ export default function ExportReports() {
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.bg }} edges={["top"]}>
       {/* Header */}
       <View
-        className="px-4 pt-4 pb-3 flex-row items-center justify-between border-b"
-        style={{ borderBottomColor: colors.border }}
+        style={{
+          paddingHorizontal: 16, paddingTop: 16, paddingBottom: 12,
+          flexDirection: "row", alignItems: "center", justifyContent: "space-between",
+          borderBottomWidth: 1, borderBottomColor: colors.border,
+        }}
       >
-        <View className="flex-row items-center gap-3">
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
           <Pressable
             onPress={() => router.back()}
-            className="h-11 w-11 items-center justify-center rounded-full"
-            style={{ backgroundColor: colors.backBtnBg }}
+            style={{
+              height: 44, width: 44, alignItems: "center", justifyContent: "center",
+              borderRadius: 22, backgroundColor: colors.backBtnBg,
+            }}
           >
             <ChevronLeft size={22} color={colors.backBtnIcon} />
           </Pressable>
           <View>
-            <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.gold }}>Privacy-First</Text>
-            <Text className="text-2xl font-black" style={{ color: colors.text }}>Health Report</Text>
+            <Text style={{ fontSize: 9, fontWeight: "900", textTransform: "uppercase", letterSpacing: 2, color: colors.gold }}>
+              Privacy-First
+            </Text>
+            <Text style={{ fontSize: 24, fontWeight: "900", color: colors.text, letterSpacing: -0.5 }}>
+              Health Report
+            </Text>
           </View>
         </View>
         <Pressable
           onPress={handleExport}
-          className="h-11 w-11 items-center justify-center rounded-full"
-          style={{ backgroundColor: colors.greenBg }}
+          style={{
+            height: 44, width: 44, alignItems: "center", justifyContent: "center",
+            borderRadius: 22, backgroundColor: colors.greenBg,
+            borderWidth: 1, borderColor: colors.green + "30",
+          }}
         >
           <Share size={18} color={colors.green} />
         </Pressable>
@@ -74,10 +86,10 @@ export default function ExportReports() {
       <ScrollView className="flex-1 px-4" keyboardShouldPersistTaps="handled">
         {/* Privacy Banner */}
         <View className="mt-4 mb-5 overflow-hidden rounded-2xl p-5" style={{ backgroundColor: colors.hero }}>
-          <View className="absolute top-0 right-0 h-36 w-36 rounded-full bg-[#16A34A]/10" />
+          <View style={{ position: "absolute", top: -20, right: -20, width: 140, height: 140, borderRadius: 70, backgroundColor: colors.greenBg }} />
           <View className="flex-row items-start gap-4">
-            <View className="h-14 w-14 items-center justify-center rounded-xl bg-[#16A34A]/20">
-              <ShieldCheck size={30} color={colors.green} />
+            <View style={{ width: 56, height: 56, alignItems: "center", justifyContent: "center", borderRadius: 16, backgroundColor: colors.greenBg, borderWidth: 1, borderColor: colors.green + "30" }}>
+              <ShieldCheck size={28} color={colors.green} />
             </View>
             <View className="flex-1">
               <Text className="text-[10px] font-black uppercase tracking-widest mb-1" style={{ color: colors.green }}>

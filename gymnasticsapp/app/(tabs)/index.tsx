@@ -1,11 +1,21 @@
+"use client";
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
-import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, View } from "react-native";
+import {
+  Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, View,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { api, useAuthActions, useMutation, useQuery } from "@/lib/demoData";
 import { Text, SafeAreaView, Spinner, Input } from "@/components/ui";
-import { Trophy, ChevronRight, Heart, LogOut, Moon, PlayCircle, Sun, Upload } from "lucide-react-native";
+import { AnimatedPressable } from "@/components/ui/AnimatedPressable";
+import {
+  ArrowRight, Building2, CalendarCheck, CalendarDays,
+  ChevronRight, Coins, Dumbbell, FileText, GraduationCap,
+  Handshake, Heart, LogOut, Map, Medal, Moon, PlayCircle,
+  Star, Sun, Trophy, Upload,
+} from "lucide-react-native";
 import { useAppTheme } from "@/lib/appTheme";
+import { AppColors } from "@/lib/appTheme";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -16,150 +26,322 @@ export default function Dashboard() {
 
   if (gymnast === undefined || user === undefined) {
     return (
-      <View className="flex-1 items-center justify-center" style={{ backgroundColor: colors.bg }}>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.bg }}>
         <Spinner />
       </View>
     );
   }
 
-  if (gymnast === null) {
-    return <CreateGymnastView user={user} />;
-  }
+  if (gymnast === null) return <CreateGymnastView user={user} />;
 
   return (
-    <SafeAreaView className="flex-1" style={{ backgroundColor: colors.bg }} edges={["top"]}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }} edges={["top"]}>
       {/* ── Nav Bar ── */}
       <View
-        className="flex-row items-center justify-between px-4 py-3 border-b"
-        style={{ backgroundColor: colors.bg, borderColor: colors.border }}
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          paddingHorizontal: 20,
+          paddingVertical: 14,
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+          backgroundColor: colors.bg,
+        }}
       >
         <View>
-          <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.gold }}>AeroVault</Text>
-          <Text className="text-xl font-black" style={{ color: colors.text }}>{gymnast.name}</Text>
+          <Text
+            style={{
+              fontSize: 9,
+              fontWeight: "900",
+              letterSpacing: 3,
+              textTransform: "uppercase",
+              color: colors.gold,
+            }}
+          >
+            The Ascent
+          </Text>
+          <Text style={{ fontSize: 22, fontWeight: "900", color: colors.text, letterSpacing: -0.5 }}>
+            {gymnast.name}
+          </Text>
         </View>
-        <View className="flex-row items-center gap-3">
-          <View className="flex-row items-center gap-1.5 rounded-full px-3 py-1.5" style={{ backgroundColor: colors.goldBg }}>
-            <Text className="text-sm">🪙</Text>
-            <Text className="text-xs font-black" style={{ color: colors.gold }}>420</Text>
+
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+          {/* Quest Power pill */}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 5,
+              borderRadius: 99,
+              paddingHorizontal: 12,
+              paddingVertical: 6,
+              backgroundColor: colors.goldBg,
+              borderWidth: 1,
+              borderColor: colors.gold + "30",
+            }}
+          >
+            <Coins size={12} color={colors.gold} />
+            <Text style={{ fontSize: 11, fontWeight: "900", color: colors.gold }}>420</Text>
           </View>
+
           <Pressable
             onPress={toggleTheme}
-            className="h-10 w-10 items-center justify-center rounded-full"
-            style={{ backgroundColor: colors.bgTertiary }}
+            accessibilityLabel={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            accessibilityRole="button"
+            hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
+            style={{
+              height: 40, width: 40, alignItems: "center", justifyContent: "center",
+              borderRadius: 20, backgroundColor: colors.backBtnBg,
+            }}
           >
             {isDark
-              ? <Sun size={17} color={colors.backBtnIcon} />
-              : <Moon size={17} color={colors.backBtnIcon} />
-            }
+              ? <Sun size={16} color={colors.backBtnIcon} />
+              : <Moon size={16} color={colors.backBtnIcon} />}
           </Pressable>
+
           <Pressable
             onPress={() => signOut()}
-            className="h-10 w-10 items-center justify-center rounded-full"
-            style={{ backgroundColor: colors.bgTertiary }}
+            accessibilityLabel="Sign out"
+            accessibilityRole="button"
+            hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
+            style={{
+              height: 40, width: 40, alignItems: "center", justifyContent: "center",
+              borderRadius: 20, backgroundColor: colors.backBtnBg,
+            }}
           >
-            <LogOut size={17} color={colors.backBtnIcon} />
+            <LogOut size={16} color={colors.backBtnIcon} />
           </Pressable>
         </View>
       </View>
 
-      <ScrollView className="flex-1" keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={{ flex: 1 }}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        {/* ── Cinematic Hero ── */}
+        <View style={{ backgroundColor: colors.hero, paddingHorizontal: 20, paddingTop: 28, paddingBottom: 28, overflow: "hidden" }}>
+          {/* Gold radial glow */}
+          <View
+            style={{
+              position: "absolute",
+              top: -40,
+              right: -40,
+              width: 200,
+              height: 200,
+              borderRadius: 100,
+              backgroundColor: colors.goldGlow,
+            }}
+          />
+          <View
+            style={{
+              position: "absolute",
+              bottom: -20,
+              left: 40,
+              width: 120,
+              height: 120,
+              borderRadius: 60,
+              backgroundColor: "rgba(212,175,55,0.06)",
+            }}
+          />
 
-        {/* ── Hero ── */}
-        <View className="px-5 pt-8 pb-8" style={{ backgroundColor: colors.hero }}>
-          <View className="absolute top-0 right-0 h-40 w-40 rounded-full bg-[#D4A843]/10" />
-          <Text className="text-[10px] font-black uppercase tracking-widest mb-2" style={{ color: colors.gold }}>
-            Path to Podium
-          </Text>
-          <Text className="text-[32px] font-black leading-tight mb-3" style={{ color: colors.heroText }}>
-            Quest Arc:{"\n"}Kip Breakthrough
-          </Text>
-          <Text className="text-sm leading-5 mb-5" style={{ color: colors.heroSubtext }}>
-            {gymnast.name} is 68% through this week's bars arc. Next mission: connect cast, kip, and back hip circle with clean lines.
-          </Text>
-          <View className="h-2.5 overflow-hidden rounded-full bg-white/10 mb-6">
-            <View className="h-full w-[68%] rounded-full" style={{ backgroundColor: colors.gold }} />
+          {/* Eyebrow */}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 6,
+              marginBottom: 14,
+              alignSelf: "flex-start",
+              borderRadius: 99,
+              borderWidth: 1,
+              borderColor: colors.gold + "30",
+              paddingHorizontal: 12,
+              paddingVertical: 5,
+              backgroundColor: colors.goldBg,
+            }}
+          >
+            <View style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: colors.gold }} />
+            <Text style={{ fontSize: 9, fontWeight: "900", letterSpacing: 2, textTransform: "uppercase", color: colors.gold }}>
+              Active Quest Arc
+            </Text>
           </View>
-          <View className="flex-row gap-3">
-            <Pressable
+
+          <Text style={{ fontSize: 30, fontWeight: "900", color: colors.heroText, lineHeight: 34, marginBottom: 10, letterSpacing: -0.5 }}>
+            Kip{"\n"}Breakthrough
+          </Text>
+
+          <Text style={{ fontSize: 13, lineHeight: 20, color: colors.heroSubtext, marginBottom: 20, maxWidth: 280 }}>
+            {gymnast.name} is 68% through this week's bars arc. Next: connect cast, kip, and back hip circle.
+          </Text>
+
+          {/* Progress bar */}
+          <View style={{ height: 3, borderRadius: 99, backgroundColor: "rgba(255,255,255,0.08)", marginBottom: 20 }}>
+            <View style={{ height: "100%", width: "68%", borderRadius: 99, backgroundColor: colors.gold }} />
+          </View>
+
+          {/* CTAs */}
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <AnimatedPressable
               onPress={() => router.push("/skill-roadmap")}
-              className="flex-1 items-center rounded-xl py-3.5"
-              style={{ backgroundColor: colors.gold }}
+              style={{
+                flex: 1,
+                alignItems: "center",
+                flexDirection: "row",
+                justifyContent: "center",
+                gap: 8,
+                borderRadius: 12,
+                paddingVertical: 14,
+                backgroundColor: colors.gold,
+              }}
             >
-              <Text className="font-black" style={{ color: "#1A1A1A" }}>Open Podium Map</Text>
-            </Pressable>
-            <Pressable
-              className="items-center rounded-xl border border-white/20 px-5 py-3.5"
+              <Text style={{ fontWeight: "900", fontSize: 13, color: "#0A0A0E" }}>Open Quest Map</Text>
+              <ArrowRight size={14} color="#0A0A0E" />
+            </AnimatedPressable>
+            <AnimatedPressable
+              style={{
+                paddingHorizontal: 20,
+                borderRadius: 12,
+                paddingVertical: 14,
+                borderWidth: 1,
+                borderColor: "rgba(255,255,255,0.15)",
+                alignItems: "center",
+              }}
             >
-              <Text className="font-black" style={{ color: colors.heroText }}>Badges</Text>
-            </Pressable>
+              <Text style={{ fontWeight: "900", fontSize: 13, color: colors.heroText }}>Badges</Text>
+            </AnimatedPressable>
           </View>
         </View>
 
-        {/* ── Trust Badges ── */}
+        {/* ── Trust badges scroll ── */}
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          className="border-b"
-          style={{ borderColor: colors.border }}
+          style={{ borderBottomWidth: 1, borderBottomColor: colors.border }}
           contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 12, gap: 8 }}
         >
           {[
-            { emoji: "🏅", label: gymnast.level },
-            { emoji: "🏋️", label: gymnast.club },
-            { emoji: "⭐", label: "4 Badges Earned" },
-            { emoji: "✅", label: "Competition Ready" },
-            { emoji: "📅", label: "Active Season" },
+            { icon: <Medal size={12} color={colors.gold} />, label: gymnast.level },
+            { icon: <Building2 size={12} color={colors.textSecondary} />, label: gymnast.club },
+            { icon: <Star size={12} color={colors.gold} />, label: "4 Badges Earned" },
+            { icon: <CalendarCheck size={12} color={colors.green} />, label: "Active Season" },
           ].map((b) => (
             <View
               key={b.label}
-              className="flex-row items-center gap-1.5 rounded-full border px-3 py-1.5"
-              style={{ backgroundColor: colors.bgSecondary, borderColor: colors.border }}
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 6,
+                borderRadius: 99,
+                borderWidth: 1,
+                paddingHorizontal: 12,
+                paddingVertical: 7,
+                backgroundColor: colors.glass,
+                borderColor: colors.border,
+              }}
             >
-              <Text style={{ fontSize: 13 }}>{b.emoji}</Text>
-              <Text className="text-xs font-bold" style={{ color: colors.textSecondary }}>{b.label}</Text>
+              {b.icon}
+              <Text style={{ fontSize: 11, fontWeight: "700", color: colors.textSecondary }}>{b.label}</Text>
             </View>
           ))}
         </ScrollView>
 
         {/* ── Stats Row ── */}
-        <View className="flex-row border-b" style={{ backgroundColor: colors.bgSecondary, borderColor: colors.border }}>
-          <StatCell value="+14%" label="Control Growth" color="#27AE60" />
-          <View className="w-px" style={{ backgroundColor: colors.border }} />
-          <StatCell value="98" label="Safety Index" color="#2980B9" />
-          <View className="w-px" style={{ backgroundColor: colors.border }} />
+        <View
+          style={{
+            flexDirection: "row",
+            borderBottomWidth: 1,
+            borderBottomColor: colors.border,
+            backgroundColor: colors.bgSecondary,
+          }}
+        >
+          <StatCell value="+14%" label="Control Growth" color={colors.green} />
+          <View style={{ width: 1, backgroundColor: colors.border }} />
+          <StatCell value="98" label="Safety Index" color={colors.blue} />
+          <View style={{ width: 1, backgroundColor: colors.border }} />
           <StatCell value="4" label="Mastery Badges" color={colors.gold} />
         </View>
 
-        {/* ── Epic Moment Reel ── */}
-        <View className="px-4 pt-6 pb-2">
-          <EpicMomentCard gymnastId={gymnast._id} onViewAll={() => router.push("/epic-moment")} />
+        {/* ── Epic Moment ── */}
+        <View style={{ paddingHorizontal: 16, paddingTop: 24, paddingBottom: 8 }}>
+          <EpicMomentCard
+            gymnastId={gymnast._id}
+            onViewAll={() => router.push("/epic-moment")}
+          />
         </View>
 
-        {/* ── Achievement Snapshot ── */}
-        <View className="px-4 pt-4 pb-2">
+        {/* ── Recent Achievements ── */}
+        <View style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}>
           <SectionHeader label="Recent Achievements" />
           <AchievementList gymnastId={gymnast._id} />
         </View>
 
         {/* ── Wellness Snapshot ── */}
-        <View className="px-4 pt-4 pb-2">
-          <WellnessCard gymnastId={gymnast._id} />
+        <View style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}>
+          <WellnessCard
+            gymnastId={gymnast._id}
+            onPress={() => router.push("/wellness-checkin")}
+          />
         </View>
 
         {/* ── Feature Grid ── */}
-        <View className="mt-4 px-4 pt-6 pb-4" style={{ backgroundColor: colors.bgSecondary }}>
-          <SectionHeader label="Your Training Hub" />
-          <View className="flex-row flex-wrap gap-3">
-            <FeatureCard icon="🎓" title="Parent Academy" detail="Mindset scripts for tough moments" onPress={() => router.push("/parent-academy")} />
-            <FeatureCard icon="🏆" title="Meet Journal" detail="Scores, wins & confidence notes" onPress={() => router.push("/meet-journal")} />
-            <FeatureCard icon="📅" title="Training Calendar" detail="Practices, meets & reminders" onPress={() => router.push("/calendar")} />
-            <FeatureCard icon="💪" title="Recovery Lab" detail="Flexibility, fuel & focus" onPress={() => router.push("/recovery-lab")} />
-            <FeatureCard icon="🤝" title="Coach Connection" detail="Goals & shared feedback" onPress={() => router.push("/coach-connection")} />
-            <FeatureCard icon="📄" title="Health Report" detail="Privacy-first provider export" onPress={() => router.push("/export-reports")} />
+        <View style={{ paddingHorizontal: 16, paddingTop: 24, paddingBottom: 16, marginTop: 8 }}>
+          <SectionHeader label="Training Hub" />
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
+            <FeatureCard
+              icon={<Map size={24} color={colors.gold} />}
+              title="Quest Map"
+              detail="Skill progression tracker"
+              accent={colors.gold}
+              onPress={() => router.push("/skill-roadmap")}
+            />
+            <FeatureCard
+              icon={<GraduationCap size={24} color={colors.pink} />}
+              title="Parent Academy"
+              detail="Mindset scripts for tough moments"
+              accent={colors.pink}
+              onPress={() => router.push("/parent-academy")}
+            />
+            <FeatureCard
+              icon={<Trophy size={24} color={colors.gold} />}
+              title="Meet Journal"
+              detail="Scores, wins & notes"
+              accent={colors.gold}
+              onPress={() => router.push("/meet-journal")}
+            />
+            <FeatureCard
+              icon={<CalendarDays size={24} color={colors.blue} />}
+              title="Calendar"
+              detail="Practices & meets"
+              accent={colors.blue}
+              onPress={() => router.push("/calendar")}
+            />
+            <FeatureCard
+              icon={<Dumbbell size={24} color={colors.green} />}
+              title="Recovery Lab"
+              detail="Flexibility, fuel & focus"
+              accent={colors.green}
+              onPress={() => router.push("/recovery-lab")}
+            />
+            <FeatureCard
+              icon={<Handshake size={24} color={colors.blue} />}
+              title="Coach Connect"
+              detail="Goals & shared feedback"
+              accent={colors.blue}
+              onPress={() => router.push("/coach-connection")}
+            />
+            <FeatureCard
+              icon={<FileText size={24} color={colors.textMuted} />}
+              title="Health Report"
+              detail="Privacy-first export"
+              accent={colors.textMuted}
+              onPress={() => router.push("/export-reports")}
+            />
           </View>
         </View>
 
-        <View className="h-28" />
+        <View style={{ height: 120 }} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -170,9 +352,11 @@ export default function Dashboard() {
 function StatCell({ value, label, color }: { value: string; label: string; color: string }) {
   const { colors } = useAppTheme();
   return (
-    <View className="flex-1 items-center py-4">
-      <Text className="text-2xl font-black" style={{ color }}>{value}</Text>
-      <Text className="text-[10px] font-bold uppercase mt-0.5 text-center" style={{ color: colors.textMuted }}>{label}</Text>
+    <View style={{ flex: 1, alignItems: "center", paddingVertical: 18 }}>
+      <Text style={{ fontSize: 26, fontWeight: "900", color, letterSpacing: -1 }}>{value}</Text>
+      <Text style={{ fontSize: 9, fontWeight: "700", textTransform: "uppercase", letterSpacing: 1, marginTop: 2, textAlign: "center", color: colors.textMuted }}>
+        {label}
+      </Text>
     </View>
   );
 }
@@ -180,33 +364,72 @@ function StatCell({ value, label, color }: { value: string; label: string; color
 function SectionHeader({ label }: { label: string }) {
   const { colors } = useAppTheme();
   return (
-    <View className="flex-row items-center gap-3 mb-4">
-      <Text className="text-lg font-black" style={{ color: colors.text }}>{label}</Text>
-      <View className="flex-1 h-px" style={{ backgroundColor: colors.border }} />
+    <View style={{ flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 14 }}>
+      <Text style={{ fontSize: 9, fontWeight: "900", textTransform: "uppercase", letterSpacing: 2, color: colors.gold }}>
+        {label}
+      </Text>
+      <View style={{ flex: 1, height: 1, backgroundColor: colors.border }} />
     </View>
   );
 }
 
-function FeatureCard({ icon, title, detail, onPress }: { icon: string; title: string; detail: string; onPress: () => void }) {
+function FeatureCard({
+  icon, title, detail, accent, onPress,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  detail: string;
+  accent: string;
+  onPress: () => void;
+}) {
   const { colors } = useAppTheme();
   return (
-    <Pressable
+    <AnimatedPressable
       onPress={onPress}
-      className="flex-1 min-w-[44%] rounded-2xl p-4"
-      style={[{ backgroundColor: colors.surface }, colors.shadow]}
+      style={{
+        flex: 1,
+        minWidth: "44%",
+        backgroundColor: colors.glass,
+        borderWidth: 1,
+        borderColor: colors.border,
+        borderRadius: 16,
+        padding: 16,
+        overflow: "hidden",
+      }}
     >
-      <Text style={{ fontSize: 26, marginBottom: 8 }}>{icon}</Text>
-      <Text className="font-black text-sm mb-1" style={{ color: colors.text }}>{title}</Text>
-      <Text className="text-xs leading-4" style={{ color: colors.textMuted }}>{detail}</Text>
-      <View className="flex-row items-center gap-1 mt-3">
-        <Text className="text-[10px] font-black uppercase" style={{ color: colors.gold }}>Open</Text>
-        <ChevronRight size={10} color={colors.gold} />
+      {/* Thin gold accent strip at top */}
+      <View
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 2,
+          backgroundColor: accent,
+          opacity: 0.5,
+          borderTopLeftRadius: 16,
+          borderTopRightRadius: 16,
+        }}
+      />
+      <View style={{ marginBottom: 10, marginTop: 4 }}>{icon}</View>
+      <Text style={{ fontWeight: "900", fontSize: 13, color: colors.text, marginBottom: 3 }}>{title}</Text>
+      <Text style={{ fontSize: 11, lineHeight: 16, color: colors.textMuted }}>{detail}</Text>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 3, marginTop: 12 }}>
+        <Text style={{ fontSize: 9, fontWeight: "900", textTransform: "uppercase", letterSpacing: 1, color: accent }}>
+          Open
+        </Text>
+        <ChevronRight size={9} color={accent} />
       </View>
-    </Pressable>
+    </AnimatedPressable>
   );
 }
 
-function EpicMomentCard({ gymnastId, onViewAll }: { gymnastId: any; onViewAll: () => void }) {
+function EpicMomentCard({
+  gymnastId, onViewAll,
+}: {
+  gymnastId: any;
+  onViewAll: () => void;
+}) {
   const { colors } = useAppTheme();
   const reels = useQuery(api.gymnasts.getReels, { gymnastId });
   const addReel = useMutation(api.gymnasts.addReel);
@@ -237,52 +460,125 @@ function EpicMomentCard({ gymnastId, onViewAll }: { gymnastId: any; onViewAll: (
   };
 
   return (
-    <View className="overflow-hidden rounded-2xl" style={[{ backgroundColor: colors.hero }, colors.shadow]}>
-      <View className="p-4">
-        <View className="flex-row items-center justify-between mb-3">
-          <View className="flex-row items-center gap-2">
-            <PlayCircle size={18} color={colors.gold} />
-            <Text className="font-black" style={{ color: colors.heroText }}>Epic Moment Reel</Text>
+    <View
+      style={{
+        overflow: "hidden",
+        borderRadius: 20,
+        backgroundColor: colors.glass,
+        borderWidth: 1,
+        borderColor: colors.border,
+      }}
+    >
+      <View style={{ padding: 16 }}>
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+            <PlayCircle size={17} color={colors.gold} />
+            <Text style={{ fontWeight: "900", color: colors.text, fontSize: 14 }}>Cinematic Vault</Text>
           </View>
-          <View className="rounded-full px-2.5 py-1" style={{ backgroundColor: "rgba(212,168,67,0.2)" }}>
-            <Text className="text-[10px] font-black uppercase" style={{ color: colors.gold }}>
+          <View
+            style={{
+              borderRadius: 99,
+              paddingHorizontal: 10,
+              paddingVertical: 4,
+              backgroundColor: colors.goldBg,
+              borderWidth: 1,
+              borderColor: colors.gold + "30",
+            }}
+          >
+            <Text style={{ fontSize: 9, fontWeight: "900", textTransform: "uppercase", color: colors.gold }}>
               {reels?.length ?? 0} clip{(reels?.length ?? 0) !== 1 ? "s" : ""}
             </Text>
           </View>
         </View>
 
-        <View className="aspect-video items-center justify-center overflow-hidden rounded-xl border border-white/10" style={{ backgroundColor: "rgba(255,255,255,0.05)" }}>
+        {/* Thumbnail */}
+        <View
+          style={{
+            aspectRatio: 16 / 9,
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
+            borderRadius: 12,
+            borderWidth: 1,
+            borderColor: colors.border,
+            backgroundColor: colors.hero,
+          }}
+        >
+          {/* Grid overlay */}
+          <View
+            style={{
+              position: "absolute",
+              inset: 0,
+              opacity: 0.04,
+            }}
+          />
           {latestReel ? (
             <>
-              <View className="h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "rgba(212,168,67,0.2)" }}>
-                <PlayCircle size={32} color={colors.gold} />
+              <View
+                style={{
+                  width: 60,
+                  height: 60,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 30,
+                  backgroundColor: colors.goldBg,
+                }}
+              >
+                <PlayCircle size={30} color={colors.gold} />
               </View>
-              <Text className="mt-2 text-xs font-bold uppercase tracking-widest" style={{ color: colors.heroSubtext }}>{latestReel.title}</Text>
+              <Text style={{ marginTop: 8, fontSize: 9, fontWeight: "900", textTransform: "uppercase", letterSpacing: 1.5, color: colors.heroSubtext }}>
+                {latestReel.title}
+              </Text>
             </>
           ) : (
             <>
-              <View className="h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.1)" }}>
-                <Upload size={24} color={colors.heroSubtext} />
+              <View
+                style={{
+                  width: 60,
+                  height: 60,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 30,
+                  backgroundColor: "rgba(255,255,255,0.06)",
+                }}
+              >
+                <Upload size={22} color={colors.textMuted} />
               </View>
-              <Text className="mt-2 text-xs font-bold uppercase tracking-widest" style={{ color: colors.heroSubtext }}>No clips yet</Text>
+              <Text style={{ marginTop: 8, fontSize: 9, fontWeight: "900", textTransform: "uppercase", letterSpacing: 1.5, color: colors.heroSubtext }}>
+                No clips yet
+              </Text>
             </>
           )}
         </View>
 
-        <View className="mt-3 flex-row gap-2">
+        <View style={{ marginTop: 12, flexDirection: "row", gap: 10 }}>
           <Pressable
             onPress={handleQuickUpload}
             disabled={uploading}
-            className="flex-1 items-center rounded-xl border border-white/20 py-3"
+            style={{
+              flex: 1,
+              alignItems: "center",
+              borderRadius: 12,
+              borderWidth: 1,
+              borderColor: colors.border,
+              paddingVertical: 12,
+            }}
           >
-            {uploading ? <Spinner /> : <Text className="text-xs font-black" style={{ color: colors.heroText }}>+ Add Clip</Text>}
+            {uploading
+              ? <Spinner />
+              : <Text style={{ fontSize: 12, fontWeight: "900", color: colors.text }}>+ Add Clip</Text>}
           </Pressable>
           <Pressable
             onPress={onViewAll}
-            className="flex-1 items-center rounded-xl py-3"
-            style={{ backgroundColor: colors.gold }}
+            style={{
+              flex: 1,
+              alignItems: "center",
+              borderRadius: 12,
+              paddingVertical: 12,
+              backgroundColor: colors.gold,
+            }}
           >
-            <Text className="text-xs font-black" style={{ color: "#1A1A1A" }}>View Vault</Text>
+            <Text style={{ fontSize: 12, fontWeight: "900", color: "#0A0A0E" }}>Open Vault</Text>
           </Pressable>
         </View>
       </View>
@@ -296,27 +592,57 @@ function AchievementList({ gymnastId }: { gymnastId: any }) {
   if (!achievements) return <Spinner />;
 
   return (
-    <View className="gap-3">
+    <View style={{ gap: 10 }}>
       {achievements.slice(0, 2).map((ach: any) => (
         <View
           key={ach._id}
-          className="flex-row items-center gap-3 rounded-2xl p-4"
-          style={[{ backgroundColor: colors.surface }, colors.shadow]}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 12,
+            borderRadius: 16,
+            padding: 14,
+            backgroundColor: colors.glass,
+            borderWidth: 1,
+            borderColor: colors.border,
+          }}
         >
-          <View className={`h-11 w-11 items-center justify-center rounded-xl ${getApparatusColor(ach.apparatus)}`}>
+          <View
+            style={{
+              height: 44,
+              width: 44,
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 12,
+              ...getApparatusColor(ach.apparatus, colors),
+            }}
+          >
             <Trophy size={18} color="#fff" />
           </View>
-          <View className="flex-1">
-            <Text className="font-black" style={{ color: colors.text }}>{ach.skillName}</Text>
-            <Text className="text-xs" style={{ color: colors.textMuted }}>{ach.apparatus} · Quest Badge</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={{ fontWeight: "900", fontSize: 13, color: colors.text }}>{ach.skillName}</Text>
+            <Text style={{ fontSize: 11, color: colors.textMuted, marginTop: 1 }}>
+              {ach.apparatus} · Quest Badge
+            </Text>
           </View>
           <View
-            className="rounded-full px-2.5 py-1"
-            style={{ backgroundColor: ach.status === "competition_ready" ? colors.goldBg : colors.bgTertiary }}
+            style={{
+              borderRadius: 99,
+              paddingHorizontal: 10,
+              paddingVertical: 4,
+              backgroundColor: ach.status === "competition_ready" ? colors.goldBg : colors.glass,
+              borderWidth: 1,
+              borderColor: ach.status === "competition_ready" ? colors.gold + "40" : colors.border,
+            }}
           >
             <Text
-              className="text-[10px] font-black uppercase"
-              style={{ color: ach.status === "competition_ready" ? colors.gold : colors.textSecondary }}
+              style={{
+                fontSize: 9,
+                fontWeight: "900",
+                textTransform: "uppercase",
+                letterSpacing: 0.5,
+                color: ach.status === "competition_ready" ? colors.gold : colors.textSecondary,
+              }}
             >
               {ach.status.replace("_", " ")}
             </Text>
@@ -327,63 +653,100 @@ function AchievementList({ gymnastId }: { gymnastId: any }) {
   );
 }
 
-function WellnessCard({ gymnastId }: { gymnastId: any }) {
+function WellnessCard({
+  gymnastId, onPress,
+}: {
+  gymnastId: any;
+  onPress: () => void;
+}) {
   const { colors } = useAppTheme();
-  const router = useRouter();
   const wellness = useQuery(api.gymnasts.getLatestWellness, { gymnastId });
 
   return (
-    <View className="overflow-hidden rounded-2xl" style={[{ backgroundColor: colors.surface }, colors.shadow]}>
+    <View
+      style={{
+        overflow: "hidden",
+        borderRadius: 20,
+        backgroundColor: colors.glass,
+        borderWidth: 1,
+        borderColor: colors.border,
+      }}
+    >
       <View
-        className="border-b px-4 py-3 flex-row items-center justify-between"
-        style={{ borderColor: colors.border }}
+        style={{
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+          paddingHorizontal: 16,
+          paddingVertical: 12,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
       >
-        <View className="flex-row items-center gap-2">
-          <Heart size={16} color="#27AE60" />
-          <Text className="font-black" style={{ color: colors.text }}>Scout Snapshot</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+          <Heart size={15} color={colors.green} />
+          <Text style={{ fontWeight: "900", fontSize: 13, color: colors.text }}>Scout Snapshot</Text>
         </View>
-        <Text className="text-xs font-bold uppercase" style={{ color: "#27AE60" }}>Today</Text>
+        <Text style={{ fontSize: 9, fontWeight: "900", textTransform: "uppercase", letterSpacing: 1, color: colors.green }}>
+          Today
+        </Text>
       </View>
-      <View className="p-4">
+
+      <View style={{ padding: 16 }}>
         {wellness ? (
-          <View className="flex-row justify-around mb-3">
+          <View style={{ flexDirection: "row", justifyContent: "space-around", marginBottom: 14 }}>
             {[
-              { label: "Energy", val: wellness.energy, color: "#2980B9" },
-              { label: "Soreness", val: wellness.soreness, color: "#C0392B" },
+              { label: "Energy", val: wellness.energy, color: colors.blue },
+              { label: "Soreness", val: wellness.soreness, color: colors.red },
               { label: "Mood", val: wellness.mood, color: colors.gold },
             ].map((m) => (
-              <View key={m.label} className="items-center">
-                <Text className="text-2xl font-black" style={{ color: m.color }}>
+              <View key={m.label} style={{ alignItems: "center" }}>
+                <Text style={{ fontSize: 26, fontWeight: "900", color: m.color, letterSpacing: -1 }}>
                   {m.val}
-                  <Text className="text-sm" style={{ color: colors.textMuted }}>/5</Text>
+                  <Text style={{ fontSize: 13, color: colors.textMuted }}>/5</Text>
                 </Text>
-                <Text className="text-[10px] font-bold uppercase mt-0.5" style={{ color: colors.textMuted }}>{m.label}</Text>
+                <Text style={{ fontSize: 9, fontWeight: "700", textTransform: "uppercase", letterSpacing: 0.5, marginTop: 2, color: colors.textMuted }}>
+                  {m.label}
+                </Text>
               </View>
             ))}
           </View>
         ) : (
-          <Text className="text-sm italic mb-3" style={{ color: colors.textMuted }}>No check-in today yet.</Text>
+          <Text style={{ fontSize: 13, fontStyle: "italic", marginBottom: 14, color: colors.textMuted }}>
+            No check-in today yet.
+          </Text>
         )}
-        <Pressable
-          onPress={() => router.push("/wellness-checkin")}
-          className="flex-row items-center justify-center gap-2 rounded-xl border py-3"
-          style={{ borderColor: colors.border }}
+
+        <AnimatedPressable
+          onPress={onPress}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 6,
+            borderRadius: 12,
+            borderWidth: 1,
+            borderColor: colors.border,
+            paddingVertical: 12,
+          }}
         >
-          <Text className="text-sm font-black" style={{ color: colors.textSecondary }}>Update Recovery Stats</Text>
-          <ChevronRight size={14} color={colors.textSecondary} />
-        </Pressable>
+          <Text style={{ fontSize: 13, fontWeight: "900", color: colors.textSecondary }}>
+            Update Recovery Stats
+          </Text>
+          <ChevronRight size={13} color={colors.textSecondary} />
+        </AnimatedPressable>
       </View>
     </View>
   );
 }
 
-function getApparatusColor(apparatus: string) {
+function getApparatusColor(apparatus: string, colors: AppColors): { backgroundColor: string } {
   switch (apparatus) {
-    case "Vault": return "bg-orange-500";
-    case "Bars":  return "bg-blue-500";
-    case "Beam":  return "bg-purple-500";
-    case "Floor": return "bg-green-500";
-    default:      return "bg-slate-400";
+    case "Vault":  return { backgroundColor: colors.orange };
+    case "Bars":   return { backgroundColor: colors.blue };
+    case "Beam":   return { backgroundColor: colors.pink };
+    case "Floor":  return { backgroundColor: colors.green };
+    default:       return { backgroundColor: colors.textMuted };
   }
 }
 
@@ -404,31 +767,43 @@ function CreateGymnastView({ user }: { user: any }) {
   };
 
   return (
-    <SafeAreaView className="flex-1" style={{ backgroundColor: colors.bg }} edges={["top"]}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }} edges={["top"]}>
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
-        <ScrollView className="flex-1 px-5 py-10" keyboardShouldPersistTaps="handled">
-          <Text className="text-[10px] font-black uppercase tracking-widest mb-2" style={{ color: colors.gold }}>Welcome</Text>
-          <Text className="text-3xl font-black mb-2" style={{ color: colors.text }}>{user?.username ?? "Gym Parent"}!</Text>
-          <Text className="mb-8 leading-5" style={{ color: colors.textMuted }}>Create your gymnast's profile to unlock the full AeroVault experience.</Text>
+        <ScrollView style={{ flex: 1, paddingHorizontal: 20, paddingTop: 40 }} keyboardShouldPersistTaps="handled">
+          <Text style={{ fontSize: 9, fontWeight: "900", letterSpacing: 3, textTransform: "uppercase", color: colors.gold, marginBottom: 8 }}>
+            Welcome to The Ascent
+          </Text>
+          <Text style={{ fontSize: 32, fontWeight: "900", color: colors.text, marginBottom: 8, letterSpacing: -0.5 }}>
+            {user?.username ?? "Champion"}
+          </Text>
+          <Text style={{ marginBottom: 36, lineHeight: 22, color: colors.textMuted, fontSize: 14 }}>
+            Build your athlete profile to unlock the full Ascent experience.
+          </Text>
 
-          <View className="gap-4 mb-6">
+          <View style={{ gap: 16, marginBottom: 24 }}>
             {[
-              { label: "Gymnast Name", key: "name", placeholder: "e.g. Maya", val: name, set: setName },
-              { label: "Current Level", key: "level", placeholder: "e.g. Level 4", val: level, set: setLevel },
-              { label: "Gym / Club Name", key: "club", placeholder: "e.g. Summit Gymnastics", val: club, set: setClub },
+              { label: "Gymnast Name", placeholder: "e.g. Maya", val: name, set: setName },
+              { label: "Current Level", placeholder: "e.g. Level 4", val: level, set: setLevel },
+              { label: "Gym / Club", placeholder: "e.g. Summit Gymnastics", val: club, set: setClub },
             ].map((f) => (
-              <View key={f.key}>
-                <Text className="text-xs font-black uppercase mb-1.5" style={{ color: colors.textSecondary }}>{f.label}</Text>
+              <View key={f.label}>
+                <Text style={{ fontSize: 9, fontWeight: "900", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 8, color: colors.textSecondary }}>
+                  {f.label}
+                </Text>
                 <View
-                  className="overflow-hidden rounded-xl border"
-                  style={{ backgroundColor: colors.bgSecondary, borderColor: colors.border }}
+                  style={{
+                    overflow: "hidden",
+                    borderRadius: 12,
+                    borderWidth: 1,
+                    borderColor: colors.border,
+                    backgroundColor: colors.glass,
+                  }}
                 >
                   <Input
                     placeholder={f.placeholder}
                     value={f.val}
                     onChangeText={f.set}
-                    className="border-0 bg-transparent px-4 py-3.5"
-                    style={{ color: colors.text }}
+                    style={{ color: colors.text, paddingHorizontal: 16, paddingVertical: 14 }}
                     placeholderTextColor={colors.textDisabled}
                   />
                 </View>
@@ -439,10 +814,16 @@ function CreateGymnastView({ user }: { user: any }) {
           <Pressable
             onPress={handleSubmit}
             disabled={loading}
-            className="items-center rounded-xl py-4"
-            style={{ backgroundColor: colors.gold }}
+            style={{
+              alignItems: "center",
+              borderRadius: 12,
+              paddingVertical: 16,
+              backgroundColor: colors.gold,
+            }}
           >
-            {loading ? <Spinner /> : <Text className="font-black" style={{ color: "#1A1A1A" }}>Create Profile</Text>}
+            {loading
+              ? <Spinner />
+              : <Text style={{ fontWeight: "900", fontSize: 15, color: "#0A0A0E" }}>Begin Your Ascent</Text>}
           </Pressable>
         </ScrollView>
       </KeyboardAvoidingView>
