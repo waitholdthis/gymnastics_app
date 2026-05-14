@@ -14,6 +14,7 @@ import {
   X,
 } from "lucide-react-native";
 import { useAppTheme } from "@/lib/appTheme";
+import { Entrance } from "@/components/cinematic/Entrance";
 
 export default function CalendarScreen() {
   const router = useRouter();
@@ -72,6 +73,7 @@ export default function CalendarScreen() {
         )}
       </View>
 
+      <Entrance delay={0} style={{ flex: 1 }}>
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
         <ScrollView className="flex-1 px-4 pt-4" keyboardShouldPersistTaps="handled">
           {isAdding ? (
@@ -113,6 +115,7 @@ export default function CalendarScreen() {
           )}
         </ScrollView>
       </KeyboardAvoidingView>
+      </Entrance>
     </SafeAreaView>
   );
 }

@@ -5,6 +5,7 @@ import { Text, SafeAreaView, Spinner } from "@/components/ui";
 import { useRouter } from "expo-router";
 import { Apple, ChevronLeft, ChevronRight, Clock, Dumbbell, Wind, Zap } from "lucide-react-native";
 import { useAppTheme } from "@/lib/appTheme";
+import { Entrance } from "@/components/cinematic/Entrance";
 
 const CATEGORIES = ["All", "Conditioning", "Stretching", "Nutrition"] as const;
 type Category = typeof CATEGORIES[number];
@@ -98,6 +99,7 @@ export default function RecoveryLab() {
         </ScrollView>
       </View>
 
+      <Entrance delay={0} style={{ flex: 1 }}>
       <ScrollView className="flex-1 px-4" keyboardShouldPersistTaps="handled">
         {resources === undefined ? (
           <View className="py-20 items-center"><Spinner /></View>
@@ -113,6 +115,7 @@ export default function RecoveryLab() {
           </View>
         )}
       </ScrollView>
+      </Entrance>
     </SafeAreaView>
   );
 }

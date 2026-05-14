@@ -5,6 +5,7 @@ import { Text, Input, SafeAreaView, Spinner } from "@/components/ui";
 import { useRouter } from "expo-router";
 import { Activity, ChevronLeft, Heart, Smile, Thermometer, Zap } from "lucide-react-native";
 import { useAppTheme } from "@/lib/appTheme";
+import { Entrance } from "@/components/cinematic/Entrance";
 
 const EMOJIS_SORENESS = ["😄", "🙂", "😐", "😣", "🔥"];
 const EMOJIS_ENERGY   = ["😴", "🥱", "⚡", "💪", "🚀"];
@@ -76,6 +77,7 @@ export default function WellnessCheckin() {
         </View>
       </View>
 
+      <Entrance delay={0} style={{ flex: 1 }}>
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
         <ScrollView
           className="flex-1"
@@ -174,6 +176,7 @@ export default function WellnessCheckin() {
           </Pressable>
         </ScrollView>
       </KeyboardAvoidingView>
+      </Entrance>
     </SafeAreaView>
   );
 }

@@ -9,6 +9,7 @@ import {
 import { api, useMutation, useQuery } from "@/lib/demoData";
 import { SafeAreaView, Spinner, Text } from "@/components/ui";
 import { useAppTheme } from "@/lib/appTheme";
+import { Entrance } from "@/components/cinematic/Entrance";
 
 const APPARATUS_LIST = ["Vault", "Bars", "Beam", "Floor"] as const;
 type Apparatus = typeof APPARATUS_LIST[number];
@@ -225,10 +226,12 @@ export default function SkillRoadmap() {
         </ScrollView>
       </View>
 
-      <ScrollView style={{ flex: 1, paddingHorizontal: 16 }} keyboardShouldPersistTaps="handled">
-        <QuestMap gymnastId={gymnast._id} apparatus={selectedApparatus} />
-        <View style={{ height: 120 }} />
-      </ScrollView>
+      <Entrance delay={0} style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1, paddingHorizontal: 16 }} keyboardShouldPersistTaps="handled">
+          <QuestMap gymnastId={gymnast._id} apparatus={selectedApparatus} />
+          <View style={{ height: 120 }} />
+        </ScrollView>
+      </Entrance>
     </SafeAreaView>
   );
 }

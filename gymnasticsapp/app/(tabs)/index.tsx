@@ -1,6 +1,6 @@
 "use client";
 import * as ImagePicker from "expo-image-picker";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, View,
 } from "react-native";
@@ -16,6 +16,13 @@ import {
 } from "lucide-react-native";
 import { useAppTheme } from "@/lib/appTheme";
 import { AppColors } from "@/lib/appTheme";
+import Animated, {
+  useSharedValue, useAnimatedStyle, withDelay, withTiming, Easing,
+} from "react-native-reanimated";
+import { LinearGradient } from "expo-linear-gradient";
+import { GoldThread } from "@/components/cinematic/GoldThread";
+import { GoldOrb } from "@/components/cinematic/GoldOrb";
+import { Entrance } from "@/components/cinematic/Entrance";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -122,103 +129,108 @@ export default function Dashboard() {
       >
         {/* ── Cinematic Hero ── */}
         <View style={{ backgroundColor: colors.hero, paddingHorizontal: 20, paddingTop: 28, paddingBottom: 28, overflow: "hidden" }}>
-          {/* Gold radial glow */}
-          <View
-            style={{
-              position: "absolute",
-              top: -40,
-              right: -40,
-              width: 200,
-              height: 200,
-              borderRadius: 100,
-              backgroundColor: colors.goldGlow,
-            }}
-          />
-          <View
-            style={{
-              position: "absolute",
-              bottom: -20,
-              left: 40,
-              width: 120,
-              height: 120,
-              borderRadius: 60,
-              backgroundColor: "rgba(212,175,55,0.06)",
-            }}
-          />
+          {/* Animated pulsing gold orbs */}
+          <GoldOrb size={240} color={colors.goldGlow} style={{ top: -60, right: -60 }} delay={0} duration={3500} />
+          <GoldOrb size={140} color="rgba(212,175,55,0.06)" style={{ bottom: -30, left: 20 }} delay={800} duration={4200} />
+          <GoldOrb size={70} color="rgba(212,175,55,0.09)" style={{ top: 55, left: -15 }} delay={1600} duration={5000} />
 
-          {/* Eyebrow */}
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 6,
-              marginBottom: 14,
-              alignSelf: "flex-start",
-              borderRadius: 99,
-              borderWidth: 1,
-              borderColor: colors.gold + "30",
-              paddingHorizontal: 12,
-              paddingVertical: 5,
-              backgroundColor: colors.goldBg,
-            }}
-          >
-            <View style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: colors.gold }} />
-            <Text style={{ fontSize: 9, fontWeight: "900", letterSpacing: 2, textTransform: "uppercase", color: colors.gold }}>
-              Active Quest Arc
+          {/* Gold thread SVG — draws itself on load */}
+          <GoldThread />
+
+          {/* Eyebrow pill */}
+          <Entrance delay={200}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 6,
+                marginBottom: 14,
+                alignSelf: "flex-start",
+                borderRadius: 99,
+                borderWidth: 1,
+                borderColor: colors.gold + "30",
+                paddingHorizontal: 12,
+                paddingVertical: 5,
+                backgroundColor: colors.goldBg,
+              }}
+            >
+              <View style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: colors.gold }} />
+              <Text style={{ fontSize: 9, fontWeight: "900", letterSpacing: 2, textTransform: "uppercase", color: colors.gold }}>
+                Active Quest Arc
+              </Text>
+            </View>
+          </Entrance>
+
+          <Entrance delay={340}>
+            <Text style={{ fontSize: 30, fontWeight: "900", color: colors.heroText, lineHeight: 34, marginBottom: 10, letterSpacing: -0.5 }}>
+              Kip{"\n"}Breakthrough
             </Text>
-          </View>
+          </Entrance>
 
-          <Text style={{ fontSize: 30, fontWeight: "900", color: colors.heroText, lineHeight: 34, marginBottom: 10, letterSpacing: -0.5 }}>
-            Kip{"\n"}Breakthrough
-          </Text>
+          <Entrance delay={460}>
+            <Text style={{ fontSize: 13, lineHeight: 20, color: colors.heroSubtext, marginBottom: 20, maxWidth: 280 }}>
+              {gymnast.name} is 68% through this week's bars arc. Next: connect cast, kip, and back hip circle.
+            </Text>
+          </Entrance>
 
-          <Text style={{ fontSize: 13, lineHeight: 20, color: colors.heroSubtext, marginBottom: 20, maxWidth: 280 }}>
-            {gymnast.name} is 68% through this week's bars arc. Next: connect cast, kip, and back hip circle.
-          </Text>
-
-          {/* Progress bar */}
-          <View style={{ height: 3, borderRadius: 99, backgroundColor: "rgba(255,255,255,0.08)", marginBottom: 20 }}>
-            <View style={{ height: "100%", width: "68%", borderRadius: 99, backgroundColor: colors.gold }} />
-          </View>
+          {/* Animated progress bar */}
+          <Entrance delay={580}>
+            <AnimatedProgressBar progress={68} color={colors.gold} />
+          </Entrance>
 
           {/* CTAs */}
-          <View style={{ flexDirection: "row", gap: 10 }}>
-            <AnimatedPressable
-              onPress={() => router.push("/skill-roadmap")}
-              style={{
-                flex: 1,
-                alignItems: "center",
-                flexDirection: "row",
-                justifyContent: "center",
-                gap: 8,
-                borderRadius: 12,
-                paddingVertical: 14,
-                backgroundColor: colors.gold,
-              }}
-            >
-              <Text style={{ fontWeight: "900", fontSize: 13, color: "#0A0A0E" }}>Open Quest Map</Text>
-              <ArrowRight size={14} color="#0A0A0E" />
-            </AnimatedPressable>
-            <AnimatedPressable
-              style={{
-                paddingHorizontal: 20,
-                borderRadius: 12,
-                paddingVertical: 14,
-                borderWidth: 1,
-                borderColor: "rgba(255,255,255,0.15)",
-                alignItems: "center",
-              }}
-            >
-              <Text style={{ fontWeight: "900", fontSize: 13, color: colors.heroText }}>Badges</Text>
-            </AnimatedPressable>
-          </View>
+          <Entrance delay={700}>
+            <View style={{ flexDirection: "row", gap: 10 }}>
+              <AnimatedPressable
+                onPress={() => router.push("/skill-roadmap")}
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  gap: 8,
+                  borderRadius: 12,
+                  paddingVertical: 14,
+                  backgroundColor: colors.gold,
+                }}
+              >
+                <Text style={{ fontWeight: "900", fontSize: 13, color: "#0A0A0E" }}>Open Quest Map</Text>
+                <ArrowRight size={14} color="#0A0A0E" />
+              </AnimatedPressable>
+              <AnimatedPressable
+                style={{
+                  paddingHorizontal: 20,
+                  borderRadius: 12,
+                  paddingVertical: 14,
+                  borderWidth: 1,
+                  borderColor: "rgba(255,255,255,0.15)",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ fontWeight: "900", fontSize: 13, color: colors.heroText }}>Badges</Text>
+              </AnimatedPressable>
+            </View>
+          </Entrance>
+
+          {/* Cinematic bottom gradient fade */}
+          <LinearGradient
+            colors={["transparent", colors.hero]}
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: 36,
+              pointerEvents: "none",
+            } as any}
+          />
         </View>
 
         {/* ── Trust badges scroll ── */}
+        <Entrance delay={80} style={{ borderBottomWidth: 1, borderBottomColor: colors.border }}>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.border }}
           contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 12, gap: 8 }}
         >
           {[
@@ -246,8 +258,10 @@ export default function Dashboard() {
             </View>
           ))}
         </ScrollView>
+        </Entrance>
 
         {/* ── Stats Row ── */}
+        <Entrance delay={160}>
         <View
           style={{
             flexDirection: "row",
@@ -262,30 +276,38 @@ export default function Dashboard() {
           <View style={{ width: 1, backgroundColor: colors.border }} />
           <StatCell value="4" label="Mastery Badges" color={colors.gold} />
         </View>
+        </Entrance>
 
         {/* ── Epic Moment ── */}
+        <Entrance delay={280}>
         <View style={{ paddingHorizontal: 16, paddingTop: 24, paddingBottom: 8 }}>
           <EpicMomentCard
             gymnastId={gymnast._id}
             onViewAll={() => router.push("/epic-moment")}
           />
         </View>
+        </Entrance>
 
         {/* ── Recent Achievements ── */}
+        <Entrance delay={380}>
         <View style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}>
           <SectionHeader label="Recent Achievements" />
           <AchievementList gymnastId={gymnast._id} />
         </View>
+        </Entrance>
 
         {/* ── Wellness Snapshot ── */}
+        <Entrance delay={460}>
         <View style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}>
           <WellnessCard
             gymnastId={gymnast._id}
             onPress={() => router.push("/wellness-checkin")}
           />
         </View>
+        </Entrance>
 
         {/* ── Feature Grid ── */}
+        <Entrance delay={540}>
         <View style={{ paddingHorizontal: 16, paddingTop: 24, paddingBottom: 16, marginTop: 8 }}>
           <SectionHeader label="Training Hub" />
           <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
@@ -340,6 +362,7 @@ export default function Dashboard() {
             />
           </View>
         </View>
+        </Entrance>
 
         <View style={{ height: 120 }} />
       </ScrollView>
@@ -348,6 +371,30 @@ export default function Dashboard() {
 }
 
 /* ─── Sub-components ─────────────────────────────────────── */
+
+function AnimatedProgressBar({ progress, color }: { progress: number; color: string }) {
+  const width = useSharedValue(0);
+
+  useEffect(() => {
+    width.value = withDelay(
+      900,
+      withTiming(progress, {
+        duration: 1400,
+        easing: Easing.bezier(0.16, 1, 0.3, 1),
+      })
+    );
+  }, []);
+
+  const barStyle = useAnimatedStyle(() => ({
+    width: `${width.value}%` as any,
+  }));
+
+  return (
+    <View style={{ height: 3, borderRadius: 99, backgroundColor: "rgba(255,255,255,0.08)", marginBottom: 20 }}>
+      <Animated.View style={[{ height: "100%", borderRadius: 99, backgroundColor: color }, barStyle]} />
+    </View>
+  );
+}
 
 function StatCell({ value, label, color }: { value: string; label: string; color: string }) {
   const { colors } = useAppTheme();

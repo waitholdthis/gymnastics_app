@@ -14,6 +14,7 @@ import {
   Users,
 } from "lucide-react-native";
 import { useAppTheme } from "@/lib/appTheme";
+import { Entrance } from "@/components/cinematic/Entrance";
 
 export default function CoachConnection() {
   const router = useRouter();
@@ -87,6 +88,7 @@ export default function CoachConnection() {
         </View>
       </View>
 
+      <Entrance delay={0} style={{ flex: 1 }}>
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
         <ScrollView className="flex-1 px-4 pt-4" keyboardShouldPersistTaps="handled">
 
@@ -241,6 +243,7 @@ export default function CoachConnection() {
           <View className="h-20" />
         </ScrollView>
       </KeyboardAvoidingView>
+      </Entrance>
     </SafeAreaView>
   );
 }

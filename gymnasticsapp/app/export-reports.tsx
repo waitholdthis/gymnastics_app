@@ -16,6 +16,7 @@ import {
   Trophy,
 } from "lucide-react-native";
 import { useAppTheme } from "@/lib/appTheme";
+import { Entrance } from "@/components/cinematic/Entrance";
 
 export default function ExportReports() {
   const router = useRouter();
@@ -83,6 +84,7 @@ export default function ExportReports() {
         </Pressable>
       </View>
 
+      <Entrance delay={0} style={{ flex: 1 }}>
       <ScrollView className="flex-1 px-4" keyboardShouldPersistTaps="handled">
         {/* Privacy Banner */}
         <View className="mt-4 mb-5 overflow-hidden rounded-2xl p-5" style={{ backgroundColor: colors.hero }}>
@@ -221,6 +223,7 @@ export default function ExportReports() {
           <Text className="font-black text-base" style={{ color: "#1A1A1A" }}>Download Medical-Grade PDF</Text>
         </Pressable>
       </ScrollView>
+      </Entrance>
     </SafeAreaView>
   );
 }

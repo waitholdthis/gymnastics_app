@@ -13,6 +13,7 @@ import {
   X,
 } from "lucide-react-native";
 import { useAppTheme } from "@/lib/appTheme";
+import { Entrance } from "@/components/cinematic/Entrance";
 
 const APPARATUS_LIST = ["Vault", "Bars", "Beam", "Floor"] as const;
 
@@ -234,6 +235,7 @@ export default function ExploreScreen() {
         </ScrollView>
       </View>
 
+      <Entrance delay={0} style={{ flex: 1 }}>
       <ScrollView className="flex-1 px-4" keyboardShouldPersistTaps="handled">
         {searchQuery.length === 0 && !selectedApparatus ? (
           <IntroductionSection onNavigate={setActiveGuide} />
@@ -322,6 +324,7 @@ export default function ExploreScreen() {
           </View>
         )}
       </ScrollView>
+      </Entrance>
     </SafeAreaView>
   );
 }

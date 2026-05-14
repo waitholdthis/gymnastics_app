@@ -15,6 +15,7 @@ import { api, useMutation, useQuery } from "@/lib/demoData";
 import { Input, SafeAreaView, Spinner, Text } from "@/components/ui";
 import { Video, ResizeMode } from "expo-av";
 import { useAppTheme } from "@/lib/appTheme";
+import { Entrance } from "@/components/cinematic/Entrance";
 
 export default function EpicMoment() {
   const router = useRouter();
@@ -161,6 +162,7 @@ export default function EpicMoment() {
         </View>
       </View>
 
+      <Entrance delay={0} style={{ flex: 1 }}>
       <ScrollView className="flex-1 px-4 pt-4" showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         {/* Upload Actions */}
         <View className="mb-4 flex-row gap-3">
@@ -241,6 +243,7 @@ export default function EpicMoment() {
 
         <View className="h-20" />
       </ScrollView>
+      </Entrance>
     </SafeAreaView>
   );
 }

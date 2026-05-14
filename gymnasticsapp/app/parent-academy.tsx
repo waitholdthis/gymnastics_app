@@ -5,6 +5,7 @@ import { Text, SafeAreaView, Spinner } from "@/components/ui";
 import { useRouter } from "expo-router";
 import { BookOpen, ChevronLeft, ChevronRight, GraduationCap, Lightbulb, MessageCircle } from "lucide-react-native";
 import { useAppTheme } from "@/lib/appTheme";
+import { Entrance } from "@/components/cinematic/Entrance";
 
 const CATEGORY_THEME: Record<string, { color: string }> = {
   "After Practice": { color: "#1D5BB5" },
@@ -65,6 +66,7 @@ export default function ParentAcademy() {
         </View>
       </View>
 
+      <Entrance delay={0} style={{ flex: 1 }}>
       <ScrollView className="flex-1 px-4" keyboardShouldPersistTaps="handled">
         {/* Hero Banner */}
         <View className="mt-4 mb-5 overflow-hidden rounded-2xl p-5" style={{ backgroundColor: colors.hero }}>
@@ -100,6 +102,7 @@ export default function ParentAcademy() {
           ))}
         </View>
       </ScrollView>
+      </Entrance>
     </SafeAreaView>
   );
 }
