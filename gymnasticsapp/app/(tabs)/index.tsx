@@ -14,6 +14,7 @@ import {
   Handshake, Heart, LogOut, Map, Medal, Moon, PlayCircle,
   Star, Sun, Trophy, Upload,
 } from "lucide-react-native";
+import { MagicBentoCard } from "@/components/cinematic/MagicBentoCard";
 import { useAppTheme } from "@/lib/appTheme";
 import { AppColors } from "@/lib/appTheme";
 import Animated, {
@@ -306,61 +307,11 @@ export default function Dashboard() {
         </View>
         </Entrance>
 
-        {/* ── Feature Grid ── */}
+        {/* ── Bento Feature Grid ── */}
         <Entrance delay={540}>
         <View style={{ paddingHorizontal: 16, paddingTop: 24, paddingBottom: 16, marginTop: 8 }}>
           <SectionHeader label="Training Hub" />
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
-            <FeatureCard
-              icon={<Map size={24} color={colors.gold} />}
-              title="Quest Map"
-              detail="Skill progression tracker"
-              accent={colors.gold}
-              onPress={() => router.push("/skill-roadmap")}
-            />
-            <FeatureCard
-              icon={<GraduationCap size={24} color={colors.pink} />}
-              title="Parent Academy"
-              detail="Mindset scripts for tough moments"
-              accent={colors.pink}
-              onPress={() => router.push("/parent-academy")}
-            />
-            <FeatureCard
-              icon={<Trophy size={24} color={colors.gold} />}
-              title="Meet Journal"
-              detail="Scores, wins & notes"
-              accent={colors.gold}
-              onPress={() => router.push("/meet-journal")}
-            />
-            <FeatureCard
-              icon={<CalendarDays size={24} color={colors.blue} />}
-              title="Calendar"
-              detail="Practices & meets"
-              accent={colors.blue}
-              onPress={() => router.push("/calendar")}
-            />
-            <FeatureCard
-              icon={<Dumbbell size={24} color={colors.green} />}
-              title="Recovery Lab"
-              detail="Flexibility, fuel & focus"
-              accent={colors.green}
-              onPress={() => router.push("/recovery-lab")}
-            />
-            <FeatureCard
-              icon={<Handshake size={24} color={colors.blue} />}
-              title="Coach Connect"
-              detail="Goals & shared feedback"
-              accent={colors.blue}
-              onPress={() => router.push("/coach-connection")}
-            />
-            <FeatureCard
-              icon={<FileText size={24} color={colors.textMuted} />}
-              title="Health Report"
-              detail="Privacy-first export"
-              accent={colors.textMuted}
-              onPress={() => router.push("/export-reports")}
-            />
-          </View>
+          <BentoGrid router={router} colors={colors} />
         </View>
         </Entrance>
 
@@ -420,54 +371,213 @@ function SectionHeader({ label }: { label: string }) {
   );
 }
 
-function FeatureCard({
-  icon, title, detail, accent, onPress,
+// ── Magic Bento Grid ────────────────────────────────────────
+function BentoGrid({ router, colors }: { router: any; colors: any }) {
+  return (
+    <View style={{ gap: 10 }}>
+      {/* Row 1: Quest Map (large) + [Parent Academy / Meet Journal] */}
+      <View style={{ flexDirection: "row", gap: 10, height: 200 }}>
+        <MagicBentoCard
+          style={{ flex: 1.5 }}
+          glowColor={colors.gold}
+          onPress={() => router.push("/skill-roadmap")}
+        >
+          <BentoCardContent
+            icon={<Map size={22} color={colors.gold} />}
+            label="Progression"
+            title="Quest Map"
+            desc="Track skills on every apparatus and unlock new levels"
+            accent={colors.gold}
+            size="lg"
+          />
+        </MagicBentoCard>
+
+        <View style={{ flex: 1, gap: 10 }}>
+          <MagicBentoCard
+            style={{ flex: 1 }}
+            glowColor={colors.pink}
+            onPress={() => router.push("/parent-academy")}
+          >
+            <BentoCardContent
+              icon={<GraduationCap size={15} color={colors.pink} />}
+              label="Academy"
+              title="Parent"
+              accent={colors.pink}
+              size="sm"
+            />
+          </MagicBentoCard>
+
+          <MagicBentoCard
+            style={{ flex: 1 }}
+            glowColor={colors.gold}
+            onPress={() => router.push("/meet-journal")}
+          >
+            <BentoCardContent
+              icon={<Trophy size={15} color={colors.gold} />}
+              label="Scores"
+              title="Meets"
+              accent={colors.gold}
+              size="sm"
+            />
+          </MagicBentoCard>
+        </View>
+      </View>
+
+      {/* Row 2: Recovery Lab + Calendar + Coach Connect */}
+      <View style={{ flexDirection: "row", gap: 10, height: 130 }}>
+        <MagicBentoCard
+          style={{ flex: 1 }}
+          glowColor={colors.green}
+          onPress={() => router.push("/recovery-lab")}
+        >
+          <BentoCardContent
+            icon={<Dumbbell size={17} color={colors.green} />}
+            label="Wellness"
+            title="Recovery Lab"
+            accent={colors.green}
+            size="md"
+          />
+        </MagicBentoCard>
+
+        <MagicBentoCard
+          style={{ flex: 1 }}
+          glowColor={colors.blue}
+          onPress={() => router.push("/calendar")}
+        >
+          <BentoCardContent
+            icon={<CalendarDays size={17} color={colors.blue} />}
+            label="Schedule"
+            title="Calendar"
+            accent={colors.blue}
+            size="md"
+          />
+        </MagicBentoCard>
+
+        <MagicBentoCard
+          style={{ flex: 1 }}
+          glowColor={colors.blue}
+          onPress={() => router.push("/coach-connection")}
+        >
+          <BentoCardContent
+            icon={<Handshake size={17} color={colors.blue} />}
+            label="Team"
+            title="Coach"
+            accent={colors.blue}
+            size="md"
+          />
+        </MagicBentoCard>
+      </View>
+
+      {/* Row 3: Health Report — full width */}
+      <MagicBentoCard
+        style={{ height: 90 }}
+        glowColor={colors.green}
+        onPress={() => router.push("/export-reports")}
+      >
+        <BentoCardContent
+          icon={<FileText size={20} color={colors.green} />}
+          label="Privacy-First"
+          title="Health Report"
+          desc="Medical-grade PDF for physicians & coaches"
+          accent={colors.green}
+          size="wide"
+        />
+      </MagicBentoCard>
+    </View>
+  );
+}
+
+function BentoCardContent({
+  icon, label, title, desc, accent, size = "md",
 }: {
   icon: React.ReactNode;
+  label: string;
   title: string;
-  detail: string;
+  desc?: string;
   accent: string;
-  onPress: () => void;
+  size?: "sm" | "md" | "lg" | "wide";
 }) {
   const { colors } = useAppTheme();
-  return (
-    <AnimatedPressable
-      onPress={onPress}
-      style={{
-        flex: 1,
-        minWidth: "44%",
-        backgroundColor: colors.glass,
-        borderWidth: 1,
-        borderColor: colors.border,
-        borderRadius: 16,
-        padding: 16,
-        overflow: "hidden",
-      }}
-    >
-      {/* Thin gold accent strip at top */}
-      <View
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 2,
-          backgroundColor: accent,
-          opacity: 0.5,
-          borderTopLeftRadius: 16,
-          borderTopRightRadius: 16,
-        }}
-      />
-      <View style={{ marginBottom: 10, marginTop: 4 }}>{icon}</View>
-      <Text style={{ fontWeight: "900", fontSize: 13, color: colors.text, marginBottom: 3 }}>{title}</Text>
-      <Text style={{ fontSize: 11, lineHeight: 16, color: colors.textMuted }}>{detail}</Text>
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 3, marginTop: 12 }}>
-        <Text style={{ fontSize: 9, fontWeight: "900", textTransform: "uppercase", letterSpacing: 1, color: accent }}>
-          Open
-        </Text>
-        <ChevronRight size={9} color={accent} />
+
+  if (size === "wide") {
+    return (
+      <View style={{ flex: 1, flexDirection: "row", alignItems: "center", padding: 16, gap: 14 }}>
+        <View
+          style={{
+            width: 44, height: 44, alignItems: "center", justifyContent: "center",
+            borderRadius: 12, backgroundColor: `${accent}20`,
+          }}
+        >
+          {icon}
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text
+            style={{ fontSize: 9, fontWeight: "900", textTransform: "uppercase", letterSpacing: 1.5, color: accent, marginBottom: 2 }}
+          >
+            {label}
+          </Text>
+          <Text style={{ fontSize: 16, fontWeight: "900", color: colors.text, letterSpacing: -0.3 }}>{title}</Text>
+          {desc && (
+            <Text style={{ fontSize: 11, color: colors.textMuted, marginTop: 2 }}>{desc}</Text>
+          )}
+        </View>
+        <ChevronRight size={16} color={accent} />
       </View>
-    </AnimatedPressable>
+    );
+  }
+
+  const iconSize = size === "lg" ? 40 : 30;
+  const titleSize = size === "lg" ? 18 : size === "sm" ? 13 : 15;
+
+  return (
+    <View style={{ flex: 1, padding: 13, justifyContent: "space-between" }}>
+      {/* Header: icon + label pill */}
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+        <View
+          style={{
+            width: iconSize, height: iconSize, alignItems: "center", justifyContent: "center",
+            borderRadius: 10, backgroundColor: `${accent}20`,
+          }}
+        >
+          {icon}
+        </View>
+        <View
+          style={{
+            borderRadius: 99, paddingHorizontal: 8, paddingVertical: 3,
+            backgroundColor: `${accent}18`,
+          }}
+        >
+          <Text
+            style={{ fontSize: 9, fontWeight: "900", textTransform: "uppercase", letterSpacing: 1, color: accent }}
+          >
+            {label}
+          </Text>
+        </View>
+      </View>
+
+      {/* Footer: title + desc + open link */}
+      <View>
+        <Text
+          style={{
+            fontSize: titleSize, fontWeight: "900", color: colors.text,
+            letterSpacing: -0.3, marginBottom: desc && size !== "sm" ? 3 : 0,
+          }}
+        >
+          {title}
+        </Text>
+        {desc && size !== "sm" && (
+          <Text style={{ fontSize: 11, lineHeight: 15, color: colors.textMuted, marginBottom: 4 }}>{desc}</Text>
+        )}
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 3, marginTop: size === "sm" ? 4 : 0 }}>
+          <Text
+            style={{ fontSize: 9, fontWeight: "900", textTransform: "uppercase", letterSpacing: 1, color: accent }}
+          >
+            Open
+          </Text>
+          <ChevronRight size={9} color={accent} />
+        </View>
+      </View>
+    </View>
   );
 }
 
