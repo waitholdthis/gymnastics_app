@@ -98,7 +98,17 @@ export default function AuthScreen() {
               }}
             >
               The{" "}
-              <Text style={{ fontStyle: "italic", color: GOLD }}>Ascent</Text>
+              <Text
+                style={{
+                  fontSize: 44,
+                  fontWeight: "900",
+                  fontStyle: "italic",
+                  lineHeight: 48,
+                  color: GOLD,
+                }}
+              >
+                Ascent
+              </Text>
             </Text>
             <Text
               style={{
@@ -185,7 +195,7 @@ export default function AuthScreen() {
                   autoCapitalize="none"
                   keyboardType="email-address"
                   autoComplete="email"
-                  style={{ flex: 1, color: CHALK, paddingVertical: 14 }}
+                  style={{ flex: 1, color: "#000000", paddingVertical: 14 }}
                   placeholderTextColor="rgba(245,245,245,0.3)"
                 />
               </View>
@@ -220,7 +230,7 @@ export default function AuthScreen() {
                   placeholder="At least 6 characters"
                   secureTextEntry
                   autoComplete="password"
-                  style={{ flex: 1, color: CHALK, paddingVertical: 14 }}
+                  style={{ flex: 1, color: "#000000", paddingVertical: 14 }}
                   placeholderTextColor="rgba(245,245,245,0.3)"
                 />
               </View>
