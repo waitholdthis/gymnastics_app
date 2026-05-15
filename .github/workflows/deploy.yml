@@ -26,20 +26,26 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: gymnasticsapp/package-lock.json
+          cache-dependency-path: landing/package-lock.json
 
       - name: Install dependencies
         run: npm ci
-        working-directory: ./gymnasticsapp
+        working-directory: ./landing
 
-      - name: Export web build
-        run: npx expo export --platform web
-        working-directory: ./gymnasticsapp
+      - name: Build landing page
+        run: npm run build
+        working-directory: ./landing
+
+      - name: Rewrite asset paths for GitHub Pages
+        run: find ./landing/out -type f -name "*.html" -exec sed -i 's|"/_next/|"/gymnastics_app/_next/|g; s|"/gymnastics_hero_bkgd.mp4|"/gymnastics_app/gymnastics_hero_bkgd.mp4|g' {} +
+
+      - name: Keep GitHub Pages from running Jekyll
+        run: touch ./landing/out/.nojekyll
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./gymnasticsapp/dist
+          path: ./landing/out
 
   deploy:
     runs-on: ubuntu-latest
